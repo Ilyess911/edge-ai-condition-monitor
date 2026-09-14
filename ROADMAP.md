@@ -20,7 +20,7 @@ claimed before it exists.
 - [x] Small autoencoder, justified as the non-linear counterpart of PCA
 - [x] Real-data track: MetroPT-3 with checksum-verified download and failure reports
 
-## Phase 3 — Real-Time Inference
+## Phase 3 — Real-Time Inference (online inference simulation, soft real-time)
 
 - [x] One window scored at a time, per-stage latency timing
 - [x] Label-free threshold calibration on held-out healthy data
@@ -38,6 +38,7 @@ claimed before it exists.
 - [x] Chance-level control for event detection (circular shift)
 - [x] Sampling-rate sweep 250-2000 Hz
 - [x] Fixed-persistence ablation
+- [x] Paced vs hot-loop latency check (EXP-010)
 - [ ] Measurements on a quiet machine (other workloads were running; load recorded)
 - [ ] Measurements on real edge hardware (Raspberry Pi, Jetson, MCU)
 - [ ] Power measurement
@@ -68,5 +69,6 @@ claimed before it exists.
 - [x] `docs/experiments.md` experiment log
 - [x] `docs/application_pitch.md`
 - [x] `docs/research_extension.md`
-- [x] Professor-style critical review applied (JOURNAL.md)
+- [x] `docs/interview_notes.md`
+- [x] Critical methodology review applied (JOURNAL.md, session 2)
 - [x] CI running the test suite

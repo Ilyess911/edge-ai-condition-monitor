@@ -1,0 +1,38 @@
+generating healthy training and calibration runs
+test seed 201
+test seed 202
+test seed 203
+test seed 204
+test seed 205
+  zscore             eventF1 0.408 PR-AUC 0.768 inf p50 2.8 us tput 3298418 sps
+  pca                eventF1 0.727 PR-AUC 0.852 inf p50 6.9 us tput 3218474 sps
+  iforest            eventF1 0.691 PR-AUC 0.776 inf p50 2110.6 us tput 181303 sps
+  autoencoder        eventF1 0.760 PR-AUC 0.863 inf p50 13.0 us tput 2330800 sps
+  iforest10          eventF1 0.670 PR-AUC 0.748 inf p50 432.3 us tput 741560 sps
+  iforest25          eventF1 0.630 PR-AUC 0.760 inf p50 634.1 us tput 575550 sps
+  iforest50          eventF1 0.597 PR-AUC 0.782 inf p50 2084.7 us tput 223575 sps
+  iforest200         eventF1 0.619 PR-AUC 0.771 inf p50 4172.2 us tput 107272 sps
+  iforest-packed     eventF1 0.691 PR-AUC 0.776 inf p50 118.2 us tput 1099732 sps
+  iforest10-packed   eventF1 0.670 PR-AUC 0.748 inf p50 95.6 us tput 1092627 sps
+  iforest25-packed   eventF1 0.630 PR-AUC 0.760 inf p50 100.7 us tput 1059530 sps
+  iforest50-packed   eventF1 0.597 PR-AUC 0.782 inf p50 106.4 us tput 1113434 sps
+  iforest200-packed  eventF1 0.619 PR-AUC 0.771 inf p50 147.0 us tput 1078247 sps
+  zscore-onnx        eventF1 0.408 PR-AUC 0.768 inf p50 9.7 us tput 1579054 sps
+  pca-onnx           eventF1 0.727 PR-AUC 0.852 inf p50 8.4 us tput 2862192 sps
+  iforest-onnx       eventF1 0.691 PR-AUC 0.776 inf p50 466.4 us tput 697706 sps
+  autoencoder-onnx   eventF1 0.760 PR-AUC 0.863 inf p50 14.9 us tput 1466362 sps
+  zscore-k3          eventF1 0.451 PR-AUC 0.768 inf p50 4.8 us tput 2278057 sps
+  pca-k3             eventF1 0.647 PR-AUC 0.852 inf p50 7.7 us tput 2907754 sps
+  iforest-k3         eventF1 0.644 PR-AUC 0.776 inf p50 4695.5 us tput 109099 sps
+  autoencoder-k3     eventF1 0.770 PR-AUC 0.863 inf p50 25.5 us tput 1183450 sps
+  paced zscore             cpu 0.35 % of one core, max lateness 0.00 ms
+  paced pca                cpu 0.44 % of one core, max lateness 0.00 ms
+  paced iforest            cpu 1.73 % of one core, max lateness 0.00 ms
+  paced iforest-packed     cpu 0.45 % of one core, max lateness 0.00 ms
+  paced autoencoder        cpu 0.36 % of one core, max lateness 0.00 ms
+  paced zscore-onnx        cpu 0.40 % of one core, max lateness 0.00 ms
+  paced pca-onnx           cpu 0.38 % of one core, max lateness 0.00 ms
+  paced iforest-onnx       cpu 0.76 % of one core, max lateness 2.01 ms
+  paced autoencoder-onnx   cpu 0.40 % of one core, max lateness 0.00 ms
+wrote results/simulated_benchmark.json in 1394 s
+EXIT 0

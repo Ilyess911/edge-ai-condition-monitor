@@ -1,106 +1,123 @@
 # Hardware deployment path
 
-> **Status: not deployed on any edge hardware.** Every measurement in this
-> repository comes from a development laptop (Apple M4, macOS, one pinned
-> thread, see `environment` in `results/*.json`). This page is a plan, and each
-> statement about a device below is an expectation to verify, not a result.
+> **Status: PROPOSED, not executed.** No part of this repository has run on a
+> Raspberry Pi, a Jetson, a microcontroller or an industrial gateway. Every
+> measurement comes from a local benchmark on a laptop (Apple M4, macOS,
+> Python 3.12, single-threaded runtimes). Statements about devices below are
+> expectations to verify, not results.
 
-## What already makes the pipeline deployable
+## 1. Implemented vs proposed
 
-| Property | Where | Why it matters on a device |
+| Topic | IMPLEMENTED (in this repository, measured on the laptop) | PROPOSED (not done) |
 |---|---|---|
-| Fixed memory per stream | `SlidingWindow` circular buffer, `SampleCleaner` state | no growth over weeks of uptime |
-| One window scored at a time, bounded cost | `StreamingEngine.process_chunk` | worst case known in advance |
-| No deep learning framework | NumPy, scikit-learn only for training | small image, no GPU needed |
-| Models as plain arrays | z-score (24 numbers), PCA matrices, autoencoder weights, packed forest arrays | portable to C or a microcontroller |
-| ONNX export with parity tests | `src/inference/onnx_export.py`, `tests/test_onnx.py` | one runtime across Pi, Jetson, x86 gateway |
-| Single-threaded measurements | `scripts/_threads.py` | closer to a core shared with acquisition |
+| Streaming | chunked ingestion, fixed-size ring buffer, one window scored at a time | same code on a Pi; C port for an MCU |
+| Serialization | pickle (development), ONNX float32 for all four detectors, flat arrays for the forest; parity tests | C header export of PCA matrices and forest tables |
+| Runtime | NumPy, scikit-learn, ONNX Runtime CPU, all pinned to one thread | ONNX Runtime on aarch64; TensorRT only if a neural model is added |
+| Quantization | none | int8 autoencoder, int16 forest thresholds, threshold recalibration |
+| Memory | scoring heap peak (tracemalloc), serialized size | process RSS on the device, including the Python runtime |
+| CPU | CPU seconds / wall seconds during a 60 s paced replay at 1 kHz | same measurement on the device, over hours, with thermal state |
+| Power | not measured | USB power meter, idle vs paced run |
+| Sensor interface | replay from memory (simulated arrays, MetroPT-3 CSV) | SPI accelerometer or DAQ, OPC UA / Modbus / MQTT inputs |
+| Edge-cloud | none | MQTT upload of alerts and feature summaries |
 
-## Target 1: Raspberry Pi 4 / 5 (Cortex-A72 / A76, 4-8 GB)
+## 2. What would need to change, by topic
 
-- **Runtime.** Python 3.11+ with NumPy and `onnxruntime` (aarch64 wheels exist).
-  scikit-learn is only needed if the model is retrained on the device.
-- **Expected change.** Per-call latency will be higher than on the laptop; the
-  magnitude must be measured, not extrapolated. The one design question that
-  matters: does p99 pipeline latency stay far below the 500 ms hop? On the laptop
-  the heaviest variant is below 10 ms, so the margin is large, but thermal
-  throttling of a fanless Pi under continuous load has to be observed over hours.
-- **Acquisition.** An accelerometer at 1 kHz or more needs a real ADC front-end
-  (e.g. an SPI MEMS accelerometer or an I²S/SPI ADC with DMA-like buffering),
-  not Python polling. The engine already consumes 50 ms chunks for that reason.
-- **What to measure first:** `scripts/run_benchmark.py` unchanged, plus
-  `vcgencmd measure_temp` and throttling flags during a paced 1-hour run.
+### Serialization
 
-## Target 2: NVIDIA Jetson Orin Nano
+- Pickle is a development convenience and unsafe to load from untrusted sources.
+  Deployment would ship the ONNX graphs (`src/inference/onnx_export.py`) or, for
+  an MCU, the raw arrays.
+- The benchmark already checks that ONNX and packed scores match native scores
+  and recalibrates the threshold for float32. That check must be repeated on the
+  target, since float behaviour can differ across CPUs and runtimes.
 
-- The GPU brings nothing for these models: a 12-feature PCA or a 100-tree forest
-  is cheaper on one CPU core than a host-to-GPU copy. The Jetson becomes
-  relevant only for heavy models (spectrogram CNNs, multi-sensor fusion) listed
-  in `docs/research_extension.md`.
-- ONNX Runtime with the CPU provider first; TensorRT only if a neural model is
-  introduced and profiled.
+### Quantization
 
-## Target 3: industrial edge gateway (x86 or ARM, Linux, often containerised)
+- z-score and PCA: a few hundred float32 values. Quantizing saves bytes that
+  do not matter.
+- Autoencoder: int8 weights would shrink 295 parameters further and enable
+  integer-only inference on an MCU or NPU.
+- Isolation Forest: thresholds as int16 after fixed-point feature scaling.
+- Required afterwards: recalibrate threshold and persistence on the quantized
+  model, then rerun detection metrics. Quantization can preserve ranking while
+  shifting the score distribution.
 
-- Deliver as a container: engine + ONNX model + TOML config.
-- Inputs usually come from a PLC or DAQ over OPC UA, Modbus TCP or MQTT rather
-  than from a raw ADC; at those rates (1-100 Hz) the cost of this pipeline is
-  negligible and the constraints become determinism, watchdogs and updates.
+### Dependencies
 
-## Microcontroller (TinyML) path
+- Laptop stack: NumPy, SciPy, scikit-learn, pandas, psutil, ONNX Runtime.
+- Minimum to run inference: NumPy + ONNX Runtime (or NumPy only with packed
+  arrays). scikit-learn, SciPy and pandas are only needed for training, the
+  simulator and MetroPT-3 loading.
+- MCU: no Python at all; CMSIS-DSP for the FFT features.
 
-The z-score and PCA detectors need a few hundred floats and matrix products; the
-packed forest is five small integer/float tables walked with a loop. Both fit in
-C on a Cortex-M4F. The costly part on an MCU is the feature stage (a 1024-point
-FFT per window), which CMSIS-DSP provides. Not implemented here.
+### Sampling
 
-## Model serialization
+- Simulated vibration: 1 kHz here, with a simulated resonance at 350 Hz. Real
+  bearing resonances are in the kHz range, so a real accelerometer channel would
+  need 10-25 kHz, 10 to 25 times more samples per window.
+- Measured on the laptop, feature extraction grew from 40 µs to 93 µs per window
+  when the rate went from 250 to 2000 Hz (8x the samples). The scaling is not
+  linear because Python overhead dominates small windows. The factor at 25 kHz on
+  ARM is unknown until measured.
+- Slow channels (temperature, pressure) need 1-10 Hz and could be decimated
+  before the ring buffer.
 
-| Format | Used for | Measured size |
-|---|---|---|
-| pickle (scikit-learn / NumPy objects) | development only; unsafe to load from untrusted sources | `cost.serialized_kib` in results |
-| ONNX (float32) | portable deployment | `serialized_kib` of `*-onnx` variants |
-| flat arrays (packed forest) | C header / MCU | `serialized_kib` of `*-packed` variants |
+### Memory
 
-## Quantization
+- Per-stream state: one window, 1000 x 5 float64 = 40 KiB at 1 kHz.
+- Models: from 24 numbers (z-score) to about 590 KiB (100-tree packed forest).
+- Unmeasured and probably dominant on a Pi: the Python interpreter, NumPy and
+  ONNX Runtime themselves (tens of MB).
+- MCU: the window buffer, not the model, is the first RAM constraint at kHz rates.
 
-- Not applied. The four detectors are already small; for z-score and PCA the
-  float32 ONNX graphs are the practical minimum.
-- Where it would matter: the autoencoder (int8 weights via ONNX Runtime dynamic
-  quantization) and forest thresholds (int16 fixed-point after feature scaling).
-  In both cases the calibrated threshold must be recomputed on the quantized
-  model, exactly as `run_benchmark.py` already does for float32 ONNX.
+### Power
 
-## Memory constraints
+- Not measured anywhere in this repository.
+- Minimum credible measurement: USB power meter on the device, idle baseline vs
+  a paced 1-hour replay, per detector.
+- The laptop CPU share during paced replay (below 2 % of one core for every
+  variant) suggests acquisition and the idle floor would dominate energy, but
+  that is an expectation.
 
-The dominant memory is not the model but the runtime: the Python interpreter
-plus NumPy is tens of MB, ONNX Runtime adds more. The per-stream state is one
-window (1000 x 5 float64 = 40 KiB at 1 kHz). On a gateway monitoring many
-machines, state scales linearly with the number of streams while models can be
-shared.
+### Sensor interface
 
-## Sampling rates
+- Current input is an in-memory array replayed in 50 ms chunks. The chunk size
+  was chosen to mimic a DAQ driver handing over a buffer.
+- Real inputs: an SPI/I²C MEMS accelerometer with a FIFO read by a C driver or
+  a DAQ, or process values from a PLC over OPC UA or Modbus TCP.
+- New failure modes to handle: clock drift between channels, reordered or
+  duplicated packets, and a stuck sensor that keeps sending a plausible constant.
+  The cleaner currently handles only out-of-range values and short gaps.
 
-`results/sampling_rate_sweep.json` shows how detection and cost change from 250
-to 2000 Hz on the simulator. On real bearings, impacts excite kHz resonances, so
-a vibration channel would need 10 kHz or more (or envelope analysis in analog
-front-end hardware), which multiplies the feature cost per window by 10; slow
-channels stay at 1-10 Hz.
+## 3. Target-specific notes
 
-## Power consumption
+### Raspberry Pi 4 / 5
 
-Not measured. A USB power meter on the Pi during a paced run, compared with an
-idle baseline, is the minimum credible measurement. Duty cycling (acquire,
-compute, sleep) is the main lever for battery-powered nodes.
+Run `scripts/run_benchmark.py` unchanged, plus `vcgencmd measure_temp` and the
+throttling flags during a paced run of at least one hour. Question to answer:
+does p99 window pipeline latency stay far below the 500 ms hop under thermal
+throttling?
 
-## Connectivity and edge-cloud split
+### NVIDIA Jetson Orin Nano
 
-- **On the edge:** acquisition, features, scoring, alerting. Alerts must not
-  depend on the network.
-- **To the cloud:** alerts, periodic feature summaries (12 floats every 0.5 s is
-  about 2 kB/s before compression, vs 40 kB/s of raw vibration), and short raw
-  snippets around alerts for diagnosis.
-- **From the cloud:** retrained models and recalibrated thresholds, versioned,
-  with a rollback path. Retraining is where drift (seen on MetroPT-3 in August)
-  is handled.
-- Transport: MQTT with store-and-forward for intermittent links.
+For these four models a GPU is not expected to help: a single feature vector
+per window is too small to amortise a host-to-device copy. This is an
+expectation; the Jetson becomes relevant for heavier models (spectrogram CNNs,
+multi-sensor fusion).
+
+### Industrial gateway
+
+Container with engine, ONNX model and TOML configuration. Inputs at 1-100 Hz from
+a PLC. The concerns shift from compute to watchdogs, versioned updates, rollback
+and time synchronisation.
+
+## 4. Edge-cloud split (proposed)
+
+- **Edge:** acquisition, features, scoring, alerting. Alerts must not depend
+  on the network.
+- **To the cloud:** alerts, feature summaries (12 float64 every 0.5 s is
+  192 B/s before compression, vs 40 kB/s for the 5 raw channels at 1 kHz), and
+  short raw snippets around alerts.
+- **From the cloud:** retrained and recalibrated models, versioned, with
+  rollback. This is where drift, observed on MetroPT-3 in August, would be
+  handled.

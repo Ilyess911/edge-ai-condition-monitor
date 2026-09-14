@@ -1,0 +1,8 @@
+train: 371520 grid samples, 10371 windows, 2008 skipped for missing data
+calib: 146880 grid samples, 4159 windows, 732 skipped for missing data
+zscore          k=9  PR-AUC 0.244 ROC-AUC 0.959 detected 4/4 (2h early view 4/4) alerts 19 false/day 0.10 in-alarm 4.5 % chance 0.66 p=0.002 inf p50 3.4 us
+pca             k=11 PR-AUC 0.254 ROC-AUC 0.959 detected 4/4 (2h early view 4/4) alerts 16 false/day 0.08 in-alarm 4.3 % chance 0.63 p=0.003 inf p50 8.6 us
+iforest         k=7  PR-AUC 0.388 ROC-AUC 0.977 detected 2/4 (2h early view 2/4) alerts 11 false/day 0.04 in-alarm 0.9 % chance 0.18 p=0.011 inf p50 2031.1 us
+autoencoder     k=12 PR-AUC 0.246 ROC-AUC 0.958 detected 4/4 (2h early view 4/4) alerts 14 false/day 0.07 in-alarm 4.3 % chance 0.59 p=0.003 inf p50 10.2 us
+iforest-packed  k=7  PR-AUC 0.388 ROC-AUC 0.977 detected 2/4 (2h early view 2/4) alerts 11 false/day 0.04 in-alarm 0.9 % chance 0.18 p=0.011 inf p50 61.0 us
+wrote results/metropt_benchmark_posthoc_drop_oil_level_fraction.json in 114 s

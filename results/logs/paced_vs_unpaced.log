@@ -1,0 +1,19 @@
+zscore       repeat 0 paced=False inference p50    7.7 µs  pipeline p50  177.2 µs
+zscore       repeat 0 paced=True  inference p50   16.2 µs  pipeline p50  374.8 µs
+zscore       repeat 1 paced=False inference p50   10.3 µs  pipeline p50  235.0 µs
+zscore       repeat 1 paced=True  inference p50   15.8 µs  pipeline p50  367.4 µs
+zscore       repeat 2 paced=False inference p50    6.3 µs  pipeline p50  148.3 µs
+zscore       repeat 2 paced=True  inference p50   16.2 µs  pipeline p50  370.3 µs
+pca          repeat 0 paced=False inference p50   25.1 µs  pipeline p50  255.2 µs
+pca          repeat 0 paced=True  inference p50   38.5 µs  pipeline p50  399.1 µs
+pca          repeat 1 paced=False inference p50   19.5 µs  pipeline p50  196.8 µs
+pca          repeat 1 paced=True  inference p50   38.6 µs  pipeline p50  393.6 µs
+pca          repeat 2 paced=False inference p50   19.0 µs  pipeline p50  190.5 µs
+pca          repeat 2 paced=True  inference p50   38.1 µs  pipeline p50  386.3 µs
+autoencoder  repeat 0 paced=False inference p50   27.5 µs  pipeline p50  207.2 µs
+autoencoder  repeat 0 paced=True  inference p50   49.7 µs  pipeline p50  391.3 µs
+autoencoder  repeat 1 paced=False inference p50   30.0 µs  pipeline p50  241.2 µs
+autoencoder  repeat 1 paced=True  inference p50   54.0 µs  pipeline p50  418.6 µs
+autoencoder  repeat 2 paced=False inference p50   29.9 µs  pipeline p50  242.5 µs
+autoencoder  repeat 2 paced=True  inference p50   52.8 µs  pipeline p50  418.7 µs
+wrote results/paced_vs_unpaced.json

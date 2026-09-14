@@ -1,0 +1,8 @@
+train: 371520 grid samples, 10371 windows, 2008 skipped for missing data
+calib: 146880 grid samples, 4159 windows, 732 skipped for missing data
+zscore          k=9  PR-AUC 0.233 ROC-AUC 0.952 detected 4/4 (2h early view 4/4) alerts 30 false/day 0.18 in-alarm 16.4 % chance 1.23 p=0.006 inf p50 2.8 us
+pca             k=11 PR-AUC 0.253 ROC-AUC 0.959 detected 4/4 (2h early view 4/4) alerts 28 false/day 0.16 in-alarm 16.0 % chance 1.19 p=0.007 inf p50 6.8 us
+iforest         k=7  PR-AUC 0.508 ROC-AUC 0.987 detected 1/4 (2h early view 1/4) alerts 6 false/day 0.01 in-alarm 0.9 % chance 0.16 p=0.157 inf p50 1723.2 us
+autoencoder     k=7  PR-AUC 0.184 ROC-AUC 0.938 detected 4/4 (2h early view 4/4) alerts 28 false/day 0.16 in-alarm 8.6 % chance 1.00 p=0.007 inf p50 10.5 us
+iforest-packed  k=7  PR-AUC 0.508 ROC-AUC 0.987 detected 1/4 (2h early view 1/4) alerts 6 false/day 0.01 in-alarm 0.9 % chance 0.16 p=0.157 inf p50 67.7 us
+wrote results/metropt_benchmark.json in 99 s

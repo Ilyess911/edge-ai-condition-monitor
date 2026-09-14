@@ -1,0 +1,873 @@
+{
+  "generated": "2026-09-14 22:59:21",
+  "rates_hz": [
+    250,
+    500,
+    1000,
+    2000
+  ],
+  "test_seeds": [
+    201,
+    202,
+    203,
+    204,
+    205
+  ],
+  "environment_start": {
+    "platform": "macOS-26.5.2-arm64-arm-64bit",
+    "machine": "arm64",
+    "cpu": "Apple M4",
+    "logical_cpus": 10,
+    "ram_gib": 24.0,
+    "python": "3.12.13",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "sklearn": "1.9.1",
+    "onnxruntime": "1.30.0",
+    "load_average_1_5_15": [
+      2.85,
+      3.54,
+      8.05
+    ],
+    "thread_env": {
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1"
+    },
+    "note": "Development laptop, NOT an edge device. See docs/hardware_deployment.md."
+  },
+  "environment": {
+    "platform": "macOS-26.5.2-arm64-arm-64bit",
+    "machine": "arm64",
+    "cpu": "Apple M4",
+    "logical_cpus": 10,
+    "ram_gib": 24.0,
+    "python": "3.12.13",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "sklearn": "1.9.1",
+    "onnxruntime": "1.30.0",
+    "load_average_1_5_15": [
+      3.5,
+      3.62,
+      7.42
+    ],
+    "thread_env": {
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1"
+    },
+    "note": "Development laptop, NOT an edge device. See docs/hardware_deployment.md."
+  },
+  "results": {
+    "250": {
+      "zscore": {
+        "event_recall": 0.08,
+        "detected": 2,
+        "events": 25,
+        "false_alarms": 7,
+        "pr_auc_mean": 0.5958377299553863,
+        "pr_auc_std": 0.09560145486417738,
+        "detected_by_kind": {
+          "electrical_overload": [
+            1,
+            5
+          ],
+          "bearing_outer_race": [
+            1,
+            5
+          ],
+          "imbalance": [
+            0,
+            5
+          ],
+          "cooling_failure": [
+            0,
+            5
+          ],
+          "cavitation": [
+            0,
+            5
+          ]
+        },
+        "raise_after": 10,
+        "feature_latency": {
+          "n": 35895,
+          "mean_us": 42.96130179690765,
+          "p50_us": 41.917,
+          "p95_us": 47.292,
+          "p99_us": 53.416,
+          "max_us": 22878.083
+        },
+        "pipeline_latency": {
+          "n": 35895,
+          "mean_us": 46.39987078980359,
+          "p50_us": 45.333,
+          "p95_us": 51.166,
+          "p99_us": 57.75,
+          "max_us": 22887.292
+        },
+        "ingest_ns_per_sample": 696.8855171111111,
+        "throughput_sps_mean": 908854.8838127196,
+        "realtime_factor_mean": 3635.4195352508787
+      },
+      "pca": {
+        "event_recall": 0.48,
+        "detected": 12,
+        "events": 25,
+        "false_alarms": 7,
+        "pr_auc_mean": 0.7024320065978102,
+        "pr_auc_std": 0.07887301716361997,
+        "detected_by_kind": {
+          "electrical_overload": [
+            1,
+            5
+          ],
+          "bearing_outer_race": [
+            3,
+            5
+          ],
+          "imbalance": [
+            4,
+            5
+          ],
+          "cooling_failure": [
+            4,
+            5
+          ],
+          "cavitation": [
+            0,
+            5
+          ]
+        },
+        "raise_after": 10,
+        "feature_latency": {
+          "n": 35895,
+          "mean_us": 40.84173525560663,
+          "p50_us": 40.292,
+          "p95_us": 44.708,
+          "p99_us": 50.125,
+          "max_us": 769.084
+        },
+        "pipeline_latency": {
+          "n": 35895,
+          "mean_us": 48.52261117147235,
+          "p50_us": 47.875,
+          "p95_us": 53.125,
+          "p99_us": 59.417,
+          "max_us": 778.125
+        },
+        "ingest_ns_per_sample": 675.1099364444444,
+        "throughput_sps_mean": 913247.3410711403,
+        "realtime_factor_mean": 3652.989364284561
+      },
+      "iforest": {
+        "event_recall": 0.36,
+        "detected": 9,
+        "events": 25,
+        "false_alarms": 2,
+        "pr_auc_mean": 0.6840921684062364,
+        "pr_auc_std": 0.078156772286507,
+        "detected_by_kind": {
+          "electrical_overload": [
+            1,
+            5
+          ],
+          "bearing_outer_race": [
+            3,
+            5
+          ],
+          "imbalance": [
+            1,
+            5
+          ],
+          "cooling_failure": [
+            2,
+            5
+          ],
+          "cavitation": [
+            2,
+            5
+          ]
+        },
+        "raise_after": 8,
+        "feature_latency": {
+          "n": 35895,
+          "mean_us": 41.29600312021173,
+          "p50_us": 40.75,
+          "p95_us": 45.583,
+          "p99_us": 50.584,
+          "max_us": 690.667
+        },
+        "pipeline_latency": {
+          "n": 35895,
+          "mean_us": 97.55717960718763,
+          "p50_us": 96.833,
+          "p95_us": 106.875,
+          "p99_us": 117.083,
+          "max_us": 745.25
+        },
+        "ingest_ns_per_sample": 678.4014015555556,
+        "throughput_sps_mean": 669820.3999410183,
+        "realtime_factor_mean": 2679.2815997640732
+      },
+      "autoencoder": {
+        "event_recall": 0.84,
+        "detected": 21,
+        "events": 25,
+        "false_alarms": 11,
+        "pr_auc_mean": 0.7898473453413823,
+        "pr_auc_std": 0.07859706675821077,
+        "detected_by_kind": {
+          "electrical_overload": [
+            2,
+            5
+          ],
+          "bearing_outer_race": [
+            4,
+            5
+          ],
+          "imbalance": [
+            5,
+            5
+          ],
+          "cooling_failure": [
+            5,
+            5
+          ],
+          "cavitation": [
+            5,
+            5
+          ]
+        },
+        "raise_after": 5,
+        "feature_latency": {
+          "n": 35895,
+          "mean_us": 41.83864295862934,
+          "p50_us": 41.209,
+          "p95_us": 45.542,
+          "p99_us": 49.708,
+          "max_us": 16176.708
+        },
+        "pipeline_latency": {
+          "n": 35895,
+          "mean_us": 52.09606329572363,
+          "p50_us": 51.5,
+          "p95_us": 56.833,
+          "p99_us": 61.5,
+          "max_us": 16198.333
+        },
+        "ingest_ns_per_sample": 676.9981308888889,
+        "throughput_sps_mean": 885700.038314696,
+        "realtime_factor_mean": 3542.800153258784
+      }
+    },
+    "500": {
+      "zscore": {
+        "event_recall": 0.28,
+        "detected": 7,
+        "events": 25,
+        "false_alarms": 7,
+        "pr_auc_mean": 0.7071923293470395,
+        "pr_auc_std": 0.10469929910971253,
+        "detected_by_kind": {
+          "electrical_overload": [
+            1,
+            5
+          ],
+          "bearing_outer_race": [
+            4,
+            5
+          ],
+          "imbalance": [
+            0,
+            5
+          ],
+          "cooling_failure": [
+            1,
+            5
+          ],
+          "cavitation": [
+            1,
+            5
+          ]
+        },
+        "raise_after": 10,
+        "feature_latency": {
+          "n": 35895,
+          "mean_us": 48.63882348516506,
+          "p50_us": 47.0,
+          "p95_us": 55.166,
+          "p99_us": 60.333,
+          "max_us": 737.5
+        },
+        "pipeline_latency": {
+          "n": 35895,
+          "mean_us": 51.90358072154896,
+          "p50_us": 50.167,
+          "p95_us": 58.875,
+          "p99_us": 64.41606,
+          "max_us": 741.167
+        },
+        "ingest_ns_per_sample": 321.5499143333333,
+        "throughput_sps_mean": 1841530.6838563725,
+        "realtime_factor_mean": 3683.061367712745
+      },
+      "pca": {
+        "event_recall": 0.68,
+        "detected": 17,
+        "events": 25,
+        "false_alarms": 7,
+        "pr_auc_mean": 0.8240923477266019,
+        "pr_auc_std": 0.05260818753177206,
+        "detected_by_kind": {
+          "electrical_overload": [
+            1,
+            5
+          ],
+          "bearing_outer_race": [
+            5,
+            5
+          ],
+          "imbalance": [
+            4,
+            5
+          ],
+          "cooling_failure": [
+            2,
+            5
+          ],
+          "cavitation": [
+            5,
+            5
+          ]
+        },
+        "raise_after": 10,
+        "feature_latency": {
+          "n": 35895,
+          "mean_us": 46.88948090263268,
+          "p50_us": 46.125,
+          "p95_us": 48.0,
+          "p99_us": 52.41945999999991,
+          "max_us": 15256.792
+        },
+        "pipeline_latency": {
+          "n": 35895,
+          "mean_us": 54.11892508705948,
+          "p50_us": 53.333,
+          "p95_us": 55.542,
+          "p99_us": 60.12745999999991,
+          "max_us": 15271.625
+        },
+        "ingest_ns_per_sample": 309.42549577777777,
+        "throughput_sps_mean": 1851169.0834268243,
+        "realtime_factor_mean": 3702.3381668536485
+      },
+      "iforest": {
+        "event_recall": 0.48,
+        "detected": 12,
+        "events": 25,
+        "false_alarms": 2,
+        "pr_auc_mean": 0.7517900815152702,
+        "pr_auc_std": 0.06497565830151192,
+        "detected_by_kind": {
+          "electrical_overload": [
+            0,
+            5
+          ],
+          "bearing_outer_race": [
+            4,
+            5
+          ],
+          "imbalance": [
+            2,
+            5
+          ],
+          "cooling_failure": [
+            1,
+            5
+          ],
+          "cavitation": [
+            5,
+            5
+          ]
+        },
+        "raise_after": 8,
+        "feature_latency": {
+          "n": 35895,
+          "mean_us": 47.06009937317175,
+          "p50_us": 46.667,
+          "p95_us": 48.875,
+          "p99_us": 54.375,
+          "max_us": 655.0
+        },
+        "pipeline_latency": {
+          "n": 35895,
+          "mean_us": 99.94701638111157,
+          "p50_us": 99.292,
+          "p95_us": 104.167,
+          "p99_us": 109.54106,
+          "max_us": 708.333
+        },
+        "ingest_ns_per_sample": 311.2261388888889,
+        "throughput_sps_mean": 1376473.8360750384,
+        "realtime_factor_mean": 2752.947672150077
+      },
+      "autoencoder": {
+        "event_recall": 0.8,
+        "detected": 20,
+        "events": 25,
+        "false_alarms": 7,
+        "pr_auc_mean": 0.8525041607159437,
+        "pr_auc_std": 0.0310519381972666,
+        "detected_by_kind": {
+          "electrical_overload": [
+            1,
+            5
+          ],
+          "bearing_outer_race": [
+            5,
+            5
+          ],
+          "imbalance": [
+            5,
+            5
+          ],
+          "cooling_failure": [
+            4,
+            5
+          ],
+          "cavitation": [
+            5,
+            5
+          ]
+        },
+        "raise_after": 8,
+        "feature_latency": {
+          "n": 35895,
+          "mean_us": 46.610044128708736,
+          "p50_us": 46.25,
+          "p95_us": 48.333,
+          "p99_us": 54.167,
+          "max_us": 656.416
+        },
+        "pipeline_latency": {
+          "n": 35895,
+          "mean_us": 56.20725304359939,
+          "p50_us": 55.834,
+          "p95_us": 58.458,
+          "p99_us": 64.458,
+          "max_us": 666.25
+        },
+        "ingest_ns_per_sample": 309.8273941111111,
+        "throughput_sps_mean": 1814344.1423161316,
+        "realtime_factor_mean": 3628.6882846322633
+      }
+    },
+    "1000": {
+      "zscore": {
+        "event_recall": 0.32,
+        "detected": 8,
+        "events": 25,
+        "false_alarms": 7,
+        "pr_auc_mean": 0.7680061347947267,
+        "pr_auc_std": 0.07652438359237447,
+        "detected_by_kind": {
+          "electrical_overload": [
+            1,
+            5
+          ],
+          "bearing_outer_race": [
+            5,
+            5
+          ],
+          "imbalance": [
+            0,
+            5
+          ],
+          "cooling_failure": [
+            0,
+            5
+          ],
+          "cavitation": [
+            2,
+            5
+          ]
+        },
+        "raise_after": 10,
+        "feature_latency": {
+          "n": 35895,
+          "mean_us": 64.99392536564982,
+          "p50_us": 62.167,
+          "p95_us": 68.55429999999983,
+          "p99_us": 105.84805999999942,
+          "max_us": 15575.583
+        },
+        "pipeline_latency": {
+          "n": 35895,
+          "mean_us": 68.28298676695918,
+          "p50_us": 65.333,
+          "p95_us": 72.0,
+          "p99_us": 111.59893999999942,
+          "max_us": 15584.083
+        },
+        "ingest_ns_per_sample": 164.63751127777778,
+        "throughput_sps_mean": 3237116.5512624797,
+        "realtime_factor_mean": 3237.11655126248
+      },
+      "pca": {
+        "event_recall": 0.72,
+        "detected": 18,
+        "events": 25,
+        "false_alarms": 7,
+        "pr_auc_mean": 0.8523815574165841,
+        "pr_auc_std": 0.03339653510175271,
+        "detected_by_kind": {
+          "electrical_overload": [
+            1,
+            5
+          ],
+          "bearing_outer_race": [
+            5,
+            5
+          ],
+          "imbalance": [
+            3,
+            5
+          ],
+          "cooling_failure": [
+            4,
+            5
+          ],
+          "cavitation": [
+            5,
+            5
+          ]
+        },
+        "raise_after": 10,
+        "feature_latency": {
+          "n": 35895,
+          "mean_us": 67.14615152528208,
+          "p50_us": 62.791,
+          "p95_us": 76.042,
+          "p99_us": 184.375,
+          "max_us": 1118.5
+        },
+        "pipeline_latency": {
+          "n": 35895,
+          "mean_us": 75.0364019222733,
+          "p50_us": 70.084,
+          "p95_us": 85.22129999999983,
+          "p99_us": 205.4185799999999,
+          "max_us": 1867.375
+        },
+        "ingest_ns_per_sample": 169.8978701111111,
+        "throughput_sps_mean": 3053828.901298397,
+        "realtime_factor_mean": 3053.8289012983973
+      },
+      "iforest": {
+        "event_recall": 0.56,
+        "detected": 14,
+        "events": 25,
+        "false_alarms": 2,
+        "pr_auc_mean": 0.7756560763987018,
+        "pr_auc_std": 0.06159703838034615,
+        "detected_by_kind": {
+          "electrical_overload": [
+            0,
+            5
+          ],
+          "bearing_outer_race": [
+            5,
+            5
+          ],
+          "imbalance": [
+            3,
+            5
+          ],
+          "cooling_failure": [
+            1,
+            5
+          ],
+          "cavitation": [
+            5,
+            5
+          ]
+        },
+        "raise_after": 8,
+        "feature_latency": {
+          "n": 35895,
+          "mean_us": 66.73083660676974,
+          "p50_us": 63.166,
+          "p95_us": 77.917,
+          "p99_us": 101.38003999999981,
+          "max_us": 15456.25
+        },
+        "pipeline_latency": {
+          "n": 35895,
+          "mean_us": 121.96352018386962,
+          "p50_us": 116.167,
+          "p95_us": 142.208,
+          "p99_us": 173.4269599999996,
+          "max_us": 15533.542
+        },
+        "ingest_ns_per_sample": 169.39225816666666,
+        "throughput_sps_mean": 2380240.003456234,
+        "realtime_factor_mean": 2380.240003456234
+      },
+      "autoencoder": {
+        "event_recall": 0.72,
+        "detected": 18,
+        "events": 25,
+        "false_alarms": 6,
+        "pr_auc_mean": 0.8631742398326002,
+        "pr_auc_std": 0.02009844795922216,
+        "detected_by_kind": {
+          "electrical_overload": [
+            1,
+            5
+          ],
+          "bearing_outer_race": [
+            5,
+            5
+          ],
+          "imbalance": [
+            4,
+            5
+          ],
+          "cooling_failure": [
+            3,
+            5
+          ],
+          "cavitation": [
+            5,
+            5
+          ]
+        },
+        "raise_after": 8,
+        "feature_latency": {
+          "n": 35895,
+          "mean_us": 64.98967544226217,
+          "p50_us": 62.875,
+          "p95_us": 75.5,
+          "p99_us": 83.7105199999999,
+          "max_us": 892.208
+        },
+        "pipeline_latency": {
+          "n": 35895,
+          "mean_us": 74.9975566513442,
+          "p50_us": 72.583,
+          "p95_us": 87.042,
+          "p99_us": 96.5,
+          "max_us": 909.458
+        },
+        "ingest_ns_per_sample": 166.21208833333333,
+        "throughput_sps_mean": 3080924.041139025,
+        "realtime_factor_mean": 3080.9240411390247
+      }
+    },
+    "2000": {
+      "zscore": {
+        "event_recall": 0.4,
+        "detected": 10,
+        "events": 25,
+        "false_alarms": 7,
+        "pr_auc_mean": 0.7661681476587904,
+        "pr_auc_std": 0.09168632888882225,
+        "detected_by_kind": {
+          "electrical_overload": [
+            1,
+            5
+          ],
+          "bearing_outer_race": [
+            5,
+            5
+          ],
+          "imbalance": [
+            0,
+            5
+          ],
+          "cooling_failure": [
+            1,
+            5
+          ],
+          "cavitation": [
+            3,
+            5
+          ]
+        },
+        "raise_after": 10,
+        "feature_latency": {
+          "n": 35895,
+          "mean_us": 93.47327650090541,
+          "p50_us": 92.542,
+          "p95_us": 98.5,
+          "p99_us": 104.375,
+          "max_us": 998.459
+        },
+        "pipeline_latency": {
+          "n": 35895,
+          "mean_us": 96.67901986349072,
+          "p50_us": 95.75,
+          "p95_us": 101.875,
+          "p99_us": 107.75,
+          "max_us": 1002.667
+        },
+        "ingest_ns_per_sample": 88.45804344444446,
+        "throughput_sps_mean": 5291737.902592353,
+        "realtime_factor_mean": 2645.8689512961764
+      },
+      "pca": {
+        "event_recall": 0.72,
+        "detected": 18,
+        "events": 25,
+        "false_alarms": 7,
+        "pr_auc_mean": 0.8517108632246556,
+        "pr_auc_std": 0.032994297336470815,
+        "detected_by_kind": {
+          "electrical_overload": [
+            1,
+            5
+          ],
+          "bearing_outer_race": [
+            5,
+            5
+          ],
+          "imbalance": [
+            3,
+            5
+          ],
+          "cooling_failure": [
+            4,
+            5
+          ],
+          "cavitation": [
+            5,
+            5
+          ]
+        },
+        "raise_after": 10,
+        "feature_latency": {
+          "n": 35895,
+          "mean_us": 94.02126023122997,
+          "p50_us": 92.584,
+          "p95_us": 97.208,
+          "p99_us": 102.541,
+          "max_us": 29184.417
+        },
+        "pipeline_latency": {
+          "n": 35895,
+          "mean_us": 101.33568767237777,
+          "p50_us": 99.875,
+          "p95_us": 104.91629999999999,
+          "p99_us": 110.208,
+          "max_us": 29206.083
+        },
+        "ingest_ns_per_sample": 87.49653361111112,
+        "throughput_sps_mean": 5189749.028130876,
+        "realtime_factor_mean": 2594.874514065438
+      },
+      "iforest": {
+        "event_recall": 0.72,
+        "detected": 18,
+        "events": 25,
+        "false_alarms": 2,
+        "pr_auc_mean": 0.7696786196622528,
+        "pr_auc_std": 0.05505726624414225,
+        "detected_by_kind": {
+          "electrical_overload": [
+            1,
+            5
+          ],
+          "bearing_outer_race": [
+            5,
+            5
+          ],
+          "imbalance": [
+            4,
+            5
+          ],
+          "cooling_failure": [
+            3,
+            5
+          ],
+          "cavitation": [
+            5,
+            5
+          ]
+        },
+        "raise_after": 7,
+        "feature_latency": {
+          "n": 35895,
+          "mean_us": 93.61297150020894,
+          "p50_us": 92.75,
+          "p95_us": 97.458,
+          "p99_us": 103.5444599999999,
+          "max_us": 810.375
+        },
+        "pipeline_latency": {
+          "n": 35895,
+          "mean_us": 146.75426301713333,
+          "p50_us": 145.583,
+          "p95_us": 152.3042999999998,
+          "p99_us": 159.25,
+          "max_us": 1333.916
+        },
+        "ingest_ns_per_sample": 87.62813441666665,
+        "throughput_sps_mean": 4188910.9980524443,
+        "realtime_factor_mean": 2094.4554990262222
+      },
+      "autoencoder": {
+        "event_recall": 0.68,
+        "detected": 17,
+        "events": 25,
+        "false_alarms": 7,
+        "pr_auc_mean": 0.8393046999970538,
+        "pr_auc_std": 0.03260538035126247,
+        "detected_by_kind": {
+          "electrical_overload": [
+            0,
+            5
+          ],
+          "bearing_outer_race": [
+            5,
+            5
+          ],
+          "imbalance": [
+            4,
+            5
+          ],
+          "cooling_failure": [
+            3,
+            5
+          ],
+          "cavitation": [
+            5,
+            5
+          ]
+        },
+        "raise_after": 10,
+        "feature_latency": {
+          "n": 35895,
+          "mean_us": 94.63808867530297,
+          "p50_us": 92.75,
+          "p95_us": 99.125,
+          "p99_us": 105.2524599999999,
+          "max_us": 17091.5
+        },
+        "pipeline_latency": {
+          "n": 35895,
+          "mean_us": 104.40444917119376,
+          "p50_us": 102.458,
+          "p95_us": 109.292,
+          "p99_us": 115.6274599999999,
+          "max_us": 17118.458
+        },
+        "ingest_ns_per_sample": 87.34650547222222,
+        "throughput_sps_mean": 5111845.197216561,
+        "realtime_factor_mean": 2555.9225986082806
+      }
+    }
+  },
+  "wall_clock_s": 134.52098989486694
+}
