@@ -40,6 +40,8 @@ class PackedIsolationForest:
         # during traversal, c(n_samples) is added once a leaf is reached.
         self.leaf_bonus = np.zeros((T, M), dtype=np.float64)
         max_depth = 0
+        self.n_nodes = sum(t.tree_.node_count for t in trees)
+        self.n_leaves = sum(t.tree_.n_leaves for t in trees)
         for i, (est, fmap) in enumerate(zip(trees, feats)):
             tr = est.tree_
             n = tr.node_count
@@ -77,7 +79,8 @@ class PackedIsolationForest:
         return out
 
     def n_parameters(self) -> int:
-        return int((~self.is_leaf).sum() * 4 + self.is_leaf.sum())
+        # Same count as IsolationForestDetector; padding slots are not parameters.
+        return int((self.n_nodes - self.n_leaves) * 4 + self.n_leaves)
 
 
 class PackedIsolationForestDetector:

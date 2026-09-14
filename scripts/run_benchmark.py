@@ -13,6 +13,7 @@ import _threads  # noqa: F401  (must precede numpy)
 
 import argparse
 import json
+import os
 import sys
 import time
 from pathlib import Path
@@ -212,3 +213,8 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+    # ONNX Runtime can abort during interpreter teardown on macOS
+    # ("recursive_mutex lock failed") after all results are written. Exit
+    # explicitly so a finished benchmark reports success.
+    sys.stdout.flush()
+    os._exit(0)

@@ -149,8 +149,11 @@ class IsolationForestDetector(Detector):
         return -self.model_.score_samples(X)
 
     def n_parameters(self):
-        # Every node stores feature, threshold, two children and a sample count.
-        return int(sum(est.tree_.node_count for est in self.model_.estimators_)) * 5
+        # Inference needs feature, threshold and two children per split node,
+        # and one path-length value per leaf.
+        n_leaves = sum(est.tree_.n_leaves for est in self.model_.estimators_)
+        n_nodes = sum(est.tree_.node_count for est in self.model_.estimators_)
+        return int((n_nodes - n_leaves) * 4 + n_leaves)
 
 
 class AutoencoderDetector(Detector):

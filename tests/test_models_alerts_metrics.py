@@ -100,3 +100,17 @@ def test_chance_detections_separates_timed_from_random_alerts():
     always_on = [SimpleNamespace(start_t=0, end_t=20000)]
     res = chance_detections(events, always_on, 20000, n_shifts=200)
     assert res["observed"] == 4 and res["p_value"] == 1.0
+
+
+def test_alarm_time_fraction_counts_short_alarms_exactly():
+    from src.benchmarking.metrics import alarm_time_fraction
+
+    alerts = [SimpleNamespace(start_t=100 + 600 * i, end_t=105 + 600 * i) for i in range(6)]
+    assert alarm_time_fraction([], alerts, 3600) == pytest.approx(30 / 3600)
+
+
+def test_packed_and_sklearn_forest_report_same_parameter_count(rng):
+    from src.inference.packed_forest import PackedIsolationForestDetector
+
+    det = build("iforest", n_estimators=15).fit(rng.normal(size=(500, 4)))
+    assert PackedIsolationForestDetector(det).n_parameters() == det.n_parameters()

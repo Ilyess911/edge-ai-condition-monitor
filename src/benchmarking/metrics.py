@@ -143,21 +143,32 @@ def _spans(alerts, duration_s):
     return [(a.start_t, a.end_t if a.end_t is not None else duration_s) for a in alerts]
 
 
+def _merge(intervals):
+    out = []
+    for a, b in sorted(intervals):
+        if out and a <= out[-1][1]:
+            out[-1][1] = max(out[-1][1], b)
+        else:
+            out.append([a, b])
+    return out
+
+
 def alarm_time_fraction(events, alerts, duration_s: float, lead_s: float = 0.0,
                         recovery_s: float = 0.0) -> float:
-    """Share of healthy time spent in ALARM. Counting false alarms hides a single
-    alarm that stays on for a week; this does not."""
-    step = 60.0
-    t = np.arange(0.0, duration_s, step)
-    busy = np.zeros(len(t), dtype=bool)
-    for ev in events:
-        rec = getattr(ev, "recovery_s", recovery_s)
-        busy |= (t >= ev.start_s - lead_s) & (t <= ev.end_s + rec)
-    on = np.zeros(len(t), dtype=bool)
-    for a, b in _spans(alerts, duration_s):
-        on |= (t >= a) & (t < b)
-    healthy = ~busy
-    return float(on[healthy].mean()) if healthy.any() else float("nan")
+    """Share of healthy time spent in ALARM, from exact interval overlaps.
+
+    Counting false alarms hides a single alarm that stays on for a week; this
+    does not."""
+    busy = _merge([(max(0.0, ev.start_s - lead_s),
+                    min(duration_s, ev.end_s + getattr(ev, "recovery_s", recovery_s)))
+                   for ev in events])
+    on = _merge([(max(0.0, a), min(duration_s, b)) for a, b in _spans(alerts, duration_s)])
+    healthy = duration_s - sum(b - a for a, b in busy)
+    if healthy <= 0:
+        return float("nan")
+    on_total = sum(b - a for a, b in on)
+    overlap = sum(max(0.0, min(b1, b2) - max(a1, a2)) for a1, b1 in on for a2, b2 in busy)
+    return (on_total - overlap) / healthy
 
 
 def chance_detections(events, alerts, duration_s: float, grace_s: float = 0.0,
