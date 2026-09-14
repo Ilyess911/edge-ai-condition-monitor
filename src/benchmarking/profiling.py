@@ -102,6 +102,8 @@ def environment() -> dict:
         "scipy": version("scipy"),
         "sklearn": version("sklearn"),
         "onnxruntime": version("onnxruntime"),
+        # Other processes compete for the same cores: record how busy the machine was.
+        "load_average_1_5_15": [round(x, 2) for x in os.getloadavg()],
         "thread_env": {
             k: os.environ.get(k)
             for k in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "VECLIB_MAXIMUM_THREADS")

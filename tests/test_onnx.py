@@ -22,3 +22,13 @@ def test_onnx_scores_match_native(rng, name, kwargs):
     np.testing.assert_allclose(ort, native, rtol=1e-4, atol=1e-4)
     single = onx.score(test[:1])
     assert single.shape == (1,)
+
+
+def test_packed_forest_matches_sklearn(rng):
+    from src.inference.packed_forest import PackedIsolationForestDetector
+
+    X = rng.normal(size=(3000, 12)) * rng.uniform(0.1, 50, size=12)
+    det = build("iforest", n_estimators=60).fit(X[:2000])
+    packed = PackedIsolationForestDetector(det)
+    test = np.vstack([X[2000:2300], X[2300:2400] * 3.0])
+    np.testing.assert_allclose(packed.score(test), det.score(test), rtol=1e-12, atol=1e-12)

@@ -1,0 +1,2613 @@
+{
+  "generated": "2026-09-14 22:06:20",
+  "config": "configs/simulated.toml",
+  "quick": true,
+  "test_seeds": [
+    101
+  ],
+  "stream": {
+    "fs": 1000,
+    "window": 1000,
+    "hop": 500,
+    "chunk": 50
+  },
+  "train_windows": 7199,
+  "calib_windows": 3599,
+  "environment": {
+    "platform": "macOS-26.5.2-arm64-arm-64bit",
+    "machine": "arm64",
+    "cpu": "Apple M4",
+    "logical_cpus": 10,
+    "ram_gib": 24.0,
+    "python": "3.12.13",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "sklearn": "1.9.1",
+    "onnxruntime": "1.30.0",
+    "thread_env": {
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1"
+    },
+    "note": "Development laptop, NOT an edge device. See docs/hardware_deployment.md."
+  },
+  "results": {
+    "zscore": {
+      "family": "zscore",
+      "runtime": "native",
+      "ablation": false,
+      "threshold": 7.986972680566649,
+      "raise_after": 10,
+      "fit_s": 0.001665708958171308,
+      "per_seed": [
+        {
+          "seed": 101,
+          "window": {
+            "roc_auc": 0.7714503186813615,
+            "pr_auc": 0.6503128472290932,
+            "precision": 0.8458904109589042,
+            "recall": 0.16217990807616547,
+            "f1": 0.2721763085399449,
+            "positives": 1523,
+            "negatives": 3881
+          },
+          "event": {
+            "n_events": 5,
+            "n_detected": 2,
+            "n_alerts": 4,
+            "n_false_alarms": 2,
+            "event_recall": 0.4,
+            "alert_precision": 0.5,
+            "event_f1": 0.4444444444444445,
+            "false_alarms_per_hour": 3.7137750018614195,
+            "mean_delay_s": 172.80117347947532,
+            "detected_by_kind": {
+              "bearing_outer_race": {
+                "detected": 1,
+                "total": 1
+              },
+              "cooling_failure": {
+                "detected": 1,
+                "total": 1
+              },
+              "imbalance": {
+                "detected": 0,
+                "total": 1
+              },
+              "electrical_overload": {
+                "detected": 0,
+                "total": 1
+              },
+              "cavitation": {
+                "detected": 0,
+                "total": 1
+              }
+            }
+          }
+        }
+      ],
+      "window": {
+        "roc_auc": {
+          "mean": 0.7714503186813615,
+          "std": 0.0
+        },
+        "pr_auc": {
+          "mean": 0.6503128472290932,
+          "std": 0.0
+        },
+        "precision": {
+          "mean": 0.8458904109589042,
+          "std": 0.0
+        },
+        "recall": {
+          "mean": 0.16217990807616547,
+          "std": 0.0
+        },
+        "f1": {
+          "mean": 0.2721763085399449,
+          "std": 0.0
+        }
+      },
+      "event": {
+        "event_recall": {
+          "mean": 0.4,
+          "std": 0.0
+        },
+        "alert_precision": {
+          "mean": 0.5,
+          "std": 0.0
+        },
+        "event_f1": {
+          "mean": 0.4444444444444445,
+          "std": 0.0
+        },
+        "false_alarms_per_hour": {
+          "mean": 3.7137750018614195,
+          "std": 0.0
+        }
+      },
+      "pooled": {
+        "events": 5,
+        "detected": 2,
+        "alerts": 4,
+        "false_alarms": 2,
+        "event_recall": 0.4,
+        "alert_precision": 0.5,
+        "mean_delay_s": 172.80117347947532,
+        "detected_by_kind": {
+          "bearing_outer_race": {
+            "detected": 1,
+            "total": 1
+          },
+          "cooling_failure": {
+            "detected": 1,
+            "total": 1
+          },
+          "imbalance": {
+            "detected": 0,
+            "total": 1
+          },
+          "electrical_overload": {
+            "detected": 0,
+            "total": 1
+          },
+          "cavitation": {
+            "detected": 0,
+            "total": 1
+          }
+        }
+      },
+      "cost": {
+        "inference_latency": {
+          "n": 7179,
+          "mean_us": 8.27788591725867,
+          "p50_us": 7.375,
+          "p95_us": 10.666,
+          "p99_us": 16.55124000000001,
+          "max_us": 3801.958
+        },
+        "pipeline_latency": {
+          "n": 7179,
+          "mean_us": 180.89283493522774,
+          "p50_us": 171.875,
+          "p95_us": 252.54609999999997,
+          "p99_us": 368.8417400000001,
+          "max_us": 18503.958
+        },
+        "feature_latency": {
+          "n": 7179,
+          "mean_us": 171.3986275247249,
+          "p50_us": 163.375,
+          "p95_us": 238.77909999999983,
+          "p99_us": 346.90726000000006,
+          "max_us": 18475.458
+        },
+        "ingest_ns_per_sample_mean": 438.0104575,
+        "throughput_sps_mean": 1216504.639599978,
+        "realtime_factor_mean": 1216.504639599978,
+        "serialized_kib": 0.4345703125,
+        "n_parameters": 24,
+        "load_rss_delta_kib": 304.0,
+        "scoring_peak_kib": 1.5625,
+        "paced": {
+          "seconds": 10.0,
+          "cpu_utilisation": 0.0026440848486851552,
+          "max_lateness_ms": 0.0
+        }
+      }
+    },
+    "pca": {
+      "family": "pca",
+      "runtime": "native",
+      "ablation": false,
+      "threshold": 3.8217956528177304,
+      "raise_after": 10,
+      "fit_s": 0.00409862503875047,
+      "per_seed": [
+        {
+          "seed": 101,
+          "window": {
+            "roc_auc": 0.8601936839626289,
+            "pr_auc": 0.7393826092301768,
+            "precision": 0.9331352154531947,
+            "recall": 0.412344057780696,
+            "f1": 0.5719489981785064,
+            "positives": 1523,
+            "negatives": 3881
+          },
+          "event": {
+            "n_events": 5,
+            "n_detected": 4,
+            "n_alerts": 6,
+            "n_false_alarms": 2,
+            "event_recall": 0.8,
+            "alert_precision": 0.6666666666666666,
+            "event_f1": 0.7272727272727272,
+            "false_alarms_per_hour": 3.7137750018614195,
+            "mean_delay_s": 92.58306198552071,
+            "detected_by_kind": {
+              "bearing_outer_race": {
+                "detected": 1,
+                "total": 1
+              },
+              "cooling_failure": {
+                "detected": 1,
+                "total": 1
+              },
+              "imbalance": {
+                "detected": 1,
+                "total": 1
+              },
+              "electrical_overload": {
+                "detected": 0,
+                "total": 1
+              },
+              "cavitation": {
+                "detected": 1,
+                "total": 1
+              }
+            }
+          }
+        }
+      ],
+      "window": {
+        "roc_auc": {
+          "mean": 0.8601936839626289,
+          "std": 0.0
+        },
+        "pr_auc": {
+          "mean": 0.7393826092301768,
+          "std": 0.0
+        },
+        "precision": {
+          "mean": 0.9331352154531947,
+          "std": 0.0
+        },
+        "recall": {
+          "mean": 0.412344057780696,
+          "std": 0.0
+        },
+        "f1": {
+          "mean": 0.5719489981785064,
+          "std": 0.0
+        }
+      },
+      "event": {
+        "event_recall": {
+          "mean": 0.8,
+          "std": 0.0
+        },
+        "alert_precision": {
+          "mean": 0.6666666666666666,
+          "std": 0.0
+        },
+        "event_f1": {
+          "mean": 0.7272727272727272,
+          "std": 0.0
+        },
+        "false_alarms_per_hour": {
+          "mean": 3.7137750018614195,
+          "std": 0.0
+        }
+      },
+      "pooled": {
+        "events": 5,
+        "detected": 4,
+        "alerts": 6,
+        "false_alarms": 2,
+        "event_recall": 0.8,
+        "alert_precision": 0.6666666666666666,
+        "mean_delay_s": 92.58306198552071,
+        "detected_by_kind": {
+          "bearing_outer_race": {
+            "detected": 1,
+            "total": 1
+          },
+          "cooling_failure": {
+            "detected": 1,
+            "total": 1
+          },
+          "imbalance": {
+            "detected": 1,
+            "total": 1
+          },
+          "electrical_overload": {
+            "detected": 0,
+            "total": 1
+          },
+          "cavitation": {
+            "detected": 1,
+            "total": 1
+          }
+        }
+      },
+      "cost": {
+        "inference_latency": {
+          "n": 7179,
+          "mean_us": 16.149278590332916,
+          "p50_us": 15.542,
+          "p95_us": 18.875,
+          "p99_us": 25.759240000000013,
+          "max_us": 98.875
+        },
+        "pipeline_latency": {
+          "n": 7179,
+          "mean_us": 163.07586571945956,
+          "p50_us": 157.167,
+          "p95_us": 189.833,
+          "p99_us": 265.03402000000034,
+          "max_us": 465.541
+        },
+        "feature_latency": {
+          "n": 7179,
+          "mean_us": 145.9524286112272,
+          "p50_us": 140.667,
+          "p95_us": 169.583,
+          "p99_us": 238.23052000000018,
+          "max_us": 418.375
+        },
+        "ingest_ns_per_sample_mean": 376.65617083333336,
+        "throughput_sps_mean": 1372888.736685495,
+        "realtime_factor_mean": 1372.888736685495,
+        "serialized_kib": 0.97265625,
+        "n_parameters": 78,
+        "load_rss_delta_kib": 128.0,
+        "scoring_peak_kib": 2.1328125,
+        "paced": {
+          "seconds": 10.0,
+          "cpu_utilisation": 0.0026838580972263167,
+          "max_lateness_ms": 0.0
+        }
+      }
+    },
+    "iforest": {
+      "family": "iforest",
+      "runtime": "native",
+      "ablation": false,
+      "threshold": 0.6357044508280947,
+      "raise_after": 8,
+      "fit_s": 0.11522499995771796,
+      "per_seed": [
+        {
+          "seed": 101,
+          "window": {
+            "roc_auc": 0.8428921951362285,
+            "pr_auc": 0.7090208352080265,
+            "precision": 0.8891402714932126,
+            "recall": 0.25804333552199604,
+            "f1": 0.4,
+            "positives": 1523,
+            "negatives": 3881
+          },
+          "event": {
+            "n_events": 5,
+            "n_detected": 2,
+            "n_alerts": 6,
+            "n_false_alarms": 2,
+            "event_recall": 0.4,
+            "alert_precision": 0.6666666666666666,
+            "event_f1": 0.5,
+            "false_alarms_per_hour": 3.7137750018614195,
+            "mean_delay_s": 19.315223575395862,
+            "detected_by_kind": {
+              "bearing_outer_race": {
+                "detected": 1,
+                "total": 1
+              },
+              "cooling_failure": {
+                "detected": 0,
+                "total": 1
+              },
+              "imbalance": {
+                "detected": 0,
+                "total": 1
+              },
+              "electrical_overload": {
+                "detected": 0,
+                "total": 1
+              },
+              "cavitation": {
+                "detected": 1,
+                "total": 1
+              }
+            }
+          }
+        }
+      ],
+      "window": {
+        "roc_auc": {
+          "mean": 0.8428921951362285,
+          "std": 0.0
+        },
+        "pr_auc": {
+          "mean": 0.7090208352080265,
+          "std": 0.0
+        },
+        "precision": {
+          "mean": 0.8891402714932126,
+          "std": 0.0
+        },
+        "recall": {
+          "mean": 0.25804333552199604,
+          "std": 0.0
+        },
+        "f1": {
+          "mean": 0.4,
+          "std": 0.0
+        }
+      },
+      "event": {
+        "event_recall": {
+          "mean": 0.4,
+          "std": 0.0
+        },
+        "alert_precision": {
+          "mean": 0.6666666666666666,
+          "std": 0.0
+        },
+        "event_f1": {
+          "mean": 0.5,
+          "std": 0.0
+        },
+        "false_alarms_per_hour": {
+          "mean": 3.7137750018614195,
+          "std": 0.0
+        }
+      },
+      "pooled": {
+        "events": 5,
+        "detected": 2,
+        "alerts": 6,
+        "false_alarms": 2,
+        "event_recall": 0.4,
+        "alert_precision": 0.6666666666666666,
+        "mean_delay_s": 19.315223575395862,
+        "detected_by_kind": {
+          "bearing_outer_race": {
+            "detected": 1,
+            "total": 1
+          },
+          "cooling_failure": {
+            "detected": 0,
+            "total": 1
+          },
+          "imbalance": {
+            "detected": 0,
+            "total": 1
+          },
+          "electrical_overload": {
+            "detected": 0,
+            "total": 1
+          },
+          "cavitation": {
+            "detected": 1,
+            "total": 1
+          }
+        }
+      },
+      "cost": {
+        "inference_latency": {
+          "n": 7179,
+          "mean_us": 3990.6511039141938,
+          "p50_us": 3935.333,
+          "p95_us": 4569.658399999999,
+          "p99_us": 5200.33924,
+          "max_us": 20987.958
+        },
+        "pipeline_latency": {
+          "n": 7179,
+          "mean_us": 4166.634686585875,
+          "p50_us": 4104.5,
+          "p95_us": 4775.192,
+          "p99_us": 5424.39802,
+          "max_us": 21306.958
+        },
+        "feature_latency": {
+          "n": 7179,
+          "mean_us": 173.8823198217022,
+          "p50_us": 164.875,
+          "p95_us": 224.21219999999997,
+          "p99_us": 296.5640200000001,
+          "max_us": 481.333
+        },
+        "ingest_ns_per_sample_mean": 403.5463158333334,
+        "throughput_sps_mean": 114095.18799918475,
+        "realtime_factor_mean": 114.09518799918476,
+        "serialized_kib": 1252.66796875,
+        "n_parameters": 70550,
+        "load_rss_delta_kib": 2368.0,
+        "scoring_peak_kib": 256.3134765625,
+        "paced": {
+          "seconds": 10.0,
+          "cpu_utilisation": 0.009360843146628732,
+          "max_lateness_ms": 0.0
+        }
+      }
+    },
+    "autoencoder": {
+      "family": "autoencoder",
+      "runtime": "native",
+      "ablation": false,
+      "threshold": 1.122628792354744,
+      "raise_after": 8,
+      "fit_s": 4.449290500022471,
+      "per_seed": [
+        {
+          "seed": 101,
+          "window": {
+            "roc_auc": 0.8005760000866217,
+            "pr_auc": 0.7108357658976415,
+            "precision": 0.9530386740331491,
+            "recall": 0.4530531845042679,
+            "f1": 0.6141522029372496,
+            "positives": 1523,
+            "negatives": 3881
+          },
+          "event": {
+            "n_events": 5,
+            "n_detected": 3,
+            "n_alerts": 5,
+            "n_false_alarms": 1,
+            "event_recall": 0.6,
+            "alert_precision": 0.8,
+            "event_f1": 0.6857142857142857,
+            "false_alarms_per_hour": 1.8568875009307098,
+            "mean_delay_s": 8.394605326859997,
+            "detected_by_kind": {
+              "bearing_outer_race": {
+                "detected": 1,
+                "total": 1
+              },
+              "cooling_failure": {
+                "detected": 0,
+                "total": 1
+              },
+              "imbalance": {
+                "detected": 1,
+                "total": 1
+              },
+              "electrical_overload": {
+                "detected": 0,
+                "total": 1
+              },
+              "cavitation": {
+                "detected": 1,
+                "total": 1
+              }
+            }
+          }
+        }
+      ],
+      "window": {
+        "roc_auc": {
+          "mean": 0.8005760000866217,
+          "std": 0.0
+        },
+        "pr_auc": {
+          "mean": 0.7108357658976415,
+          "std": 0.0
+        },
+        "precision": {
+          "mean": 0.9530386740331491,
+          "std": 0.0
+        },
+        "recall": {
+          "mean": 0.4530531845042679,
+          "std": 0.0
+        },
+        "f1": {
+          "mean": 0.6141522029372496,
+          "std": 0.0
+        }
+      },
+      "event": {
+        "event_recall": {
+          "mean": 0.6,
+          "std": 0.0
+        },
+        "alert_precision": {
+          "mean": 0.8,
+          "std": 0.0
+        },
+        "event_f1": {
+          "mean": 0.6857142857142857,
+          "std": 0.0
+        },
+        "false_alarms_per_hour": {
+          "mean": 1.8568875009307098,
+          "std": 0.0
+        }
+      },
+      "pooled": {
+        "events": 5,
+        "detected": 3,
+        "alerts": 5,
+        "false_alarms": 1,
+        "event_recall": 0.6,
+        "alert_precision": 0.8,
+        "mean_delay_s": 8.394605326859997,
+        "detected_by_kind": {
+          "bearing_outer_race": {
+            "detected": 1,
+            "total": 1
+          },
+          "cooling_failure": {
+            "detected": 0,
+            "total": 1
+          },
+          "imbalance": {
+            "detected": 1,
+            "total": 1
+          },
+          "electrical_overload": {
+            "detected": 0,
+            "total": 1
+          },
+          "cavitation": {
+            "detected": 1,
+            "total": 1
+          }
+        }
+      },
+      "cost": {
+        "inference_latency": {
+          "n": 7179,
+          "mean_us": 21.789406881181222,
+          "p50_us": 20.75,
+          "p95_us": 24.171099999999978,
+          "p99_us": 43.472000000000065,
+          "max_us": 1577.625
+        },
+        "pipeline_latency": {
+          "n": 7179,
+          "mean_us": 170.44079523610532,
+          "p50_us": 162.75,
+          "p95_us": 186.89999999999986,
+          "p99_us": 330.3317400000012,
+          "max_us": 6197.583
+        },
+        "feature_latency": {
+          "n": 7179,
+          "mean_us": 147.64340548822955,
+          "p50_us": 141.166,
+          "p95_us": 160.29159999999976,
+          "p99_us": 278.90476000000035,
+          "max_us": 6149.125
+        },
+        "ingest_ns_per_sample_mean": 394.78284861111115,
+        "throughput_sps_mean": 1322028.237024269,
+        "realtime_factor_mean": 1322.0282370242692,
+        "serialized_kib": 2.8271484375,
+        "n_parameters": 295,
+        "load_rss_delta_kib": 80.0,
+        "scoring_peak_kib": 2.1953125,
+        "paced": {
+          "seconds": 10.0,
+          "cpu_utilisation": 0.0029508945148982715,
+          "max_lateness_ms": 0.0
+        }
+      }
+    },
+    "iforest10": {
+      "family": "iforest",
+      "runtime": "native",
+      "ablation": false,
+      "threshold": 0.6146330209358392,
+      "raise_after": 8,
+      "fit_s": 0.014998291968367994,
+      "per_seed": [
+        {
+          "seed": 101,
+          "window": {
+            "roc_auc": 0.7587226048481389,
+            "pr_auc": 0.6456569010312422,
+            "precision": 0.8484251968503937,
+            "recall": 0.2829940906106369,
+            "f1": 0.4244214672575086,
+            "positives": 1523,
+            "negatives": 3881
+          },
+          "event": {
+            "n_events": 5,
+            "n_detected": 2,
+            "n_alerts": 3,
+            "n_false_alarms": 1,
+            "event_recall": 0.4,
+            "alert_precision": 0.6666666666666666,
+            "event_f1": 0.5,
+            "false_alarms_per_hour": 1.8568875009307098,
+            "mean_delay_s": 8.815223575395862,
+            "detected_by_kind": {
+              "bearing_outer_race": {
+                "detected": 1,
+                "total": 1
+              },
+              "cooling_failure": {
+                "detected": 0,
+                "total": 1
+              },
+              "imbalance": {
+                "detected": 0,
+                "total": 1
+              },
+              "electrical_overload": {
+                "detected": 0,
+                "total": 1
+              },
+              "cavitation": {
+                "detected": 1,
+                "total": 1
+              }
+            }
+          }
+        }
+      ],
+      "window": {
+        "roc_auc": {
+          "mean": 0.7587226048481389,
+          "std": 0.0
+        },
+        "pr_auc": {
+          "mean": 0.6456569010312422,
+          "std": 0.0
+        },
+        "precision": {
+          "mean": 0.8484251968503937,
+          "std": 0.0
+        },
+        "recall": {
+          "mean": 0.2829940906106369,
+          "std": 0.0
+        },
+        "f1": {
+          "mean": 0.4244214672575086,
+          "std": 0.0
+        }
+      },
+      "event": {
+        "event_recall": {
+          "mean": 0.4,
+          "std": 0.0
+        },
+        "alert_precision": {
+          "mean": 0.6666666666666666,
+          "std": 0.0
+        },
+        "event_f1": {
+          "mean": 0.5,
+          "std": 0.0
+        },
+        "false_alarms_per_hour": {
+          "mean": 1.8568875009307098,
+          "std": 0.0
+        }
+      },
+      "pooled": {
+        "events": 5,
+        "detected": 2,
+        "alerts": 3,
+        "false_alarms": 1,
+        "event_recall": 0.4,
+        "alert_precision": 0.6666666666666666,
+        "mean_delay_s": 8.815223575395862,
+        "detected_by_kind": {
+          "bearing_outer_race": {
+            "detected": 1,
+            "total": 1
+          },
+          "cooling_failure": {
+            "detected": 0,
+            "total": 1
+          },
+          "imbalance": {
+            "detected": 0,
+            "total": 1
+          },
+          "electrical_overload": {
+            "detected": 0,
+            "total": 1
+          },
+          "cavitation": {
+            "detected": 1,
+            "total": 1
+          }
+        }
+      },
+      "cost": {
+        "inference_latency": {
+          "n": 7179,
+          "mean_us": 625.4082047638948,
+          "p50_us": 626.0,
+          "p95_us": 727.4079999999996,
+          "p99_us": 922.9055000000012,
+          "max_us": 2190.5
+        },
+        "pipeline_latency": {
+          "n": 7179,
+          "mean_us": 784.2263448948322,
+          "p50_us": 785.667,
+          "p95_us": 897.4743999999997,
+          "p99_us": 1139.7947400000023,
+          "max_us": 2832.458
+        },
+        "feature_latency": {
+          "n": 7179,
+          "mean_us": 157.22423513024097,
+          "p50_us": 158.167,
+          "p95_us": 167.80029999999996,
+          "p99_us": 241.15250000000003,
+          "max_us": 1035.958
+        },
+        "ingest_ns_per_sample_mean": 378.28975027777784,
+        "throughput_sps_mean": 507965.19701655384,
+        "realtime_factor_mean": 507.9651970165538,
+        "serialized_kib": 135.7646484375,
+        "n_parameters": 7590,
+        "load_rss_delta_kib": 0.0,
+        "scoring_peak_kib": 269.6357421875
+      }
+    },
+    "iforest25": {
+      "family": "iforest",
+      "runtime": "native",
+      "ablation": false,
+      "threshold": 0.6340377720319811,
+      "raise_after": 8,
+      "fit_s": 0.032297124969772995,
+      "per_seed": [
+        {
+          "seed": 101,
+          "window": {
+            "roc_auc": 0.8019643995199942,
+            "pr_auc": 0.6742494104683547,
+            "precision": 0.8981900452488688,
+            "recall": 0.2606697307944846,
+            "f1": 0.40407124681933837,
+            "positives": 1523,
+            "negatives": 3881
+          },
+          "event": {
+            "n_events": 5,
+            "n_detected": 2,
+            "n_alerts": 6,
+            "n_false_alarms": 2,
+            "event_recall": 0.4,
+            "alert_precision": 0.6666666666666666,
+            "event_f1": 0.5,
+            "false_alarms_per_hour": 3.7137750018614195,
+            "mean_delay_s": 25.065223575395862,
+            "detected_by_kind": {
+              "bearing_outer_race": {
+                "detected": 1,
+                "total": 1
+              },
+              "cooling_failure": {
+                "detected": 0,
+                "total": 1
+              },
+              "imbalance": {
+                "detected": 0,
+                "total": 1
+              },
+              "electrical_overload": {
+                "detected": 0,
+                "total": 1
+              },
+              "cavitation": {
+                "detected": 1,
+                "total": 1
+              }
+            }
+          }
+        }
+      ],
+      "window": {
+        "roc_auc": {
+          "mean": 0.8019643995199942,
+          "std": 0.0
+        },
+        "pr_auc": {
+          "mean": 0.6742494104683547,
+          "std": 0.0
+        },
+        "precision": {
+          "mean": 0.8981900452488688,
+          "std": 0.0
+        },
+        "recall": {
+          "mean": 0.2606697307944846,
+          "std": 0.0
+        },
+        "f1": {
+          "mean": 0.40407124681933837,
+          "std": 0.0
+        }
+      },
+      "event": {
+        "event_recall": {
+          "mean": 0.4,
+          "std": 0.0
+        },
+        "alert_precision": {
+          "mean": 0.6666666666666666,
+          "std": 0.0
+        },
+        "event_f1": {
+          "mean": 0.5,
+          "std": 0.0
+        },
+        "false_alarms_per_hour": {
+          "mean": 3.7137750018614195,
+          "std": 0.0
+        }
+      },
+      "pooled": {
+        "events": 5,
+        "detected": 2,
+        "alerts": 6,
+        "false_alarms": 2,
+        "event_recall": 0.4,
+        "alert_precision": 0.6666666666666666,
+        "mean_delay_s": 25.065223575395862,
+        "detected_by_kind": {
+          "bearing_outer_race": {
+            "detected": 1,
+            "total": 1
+          },
+          "cooling_failure": {
+            "detected": 0,
+            "total": 1
+          },
+          "imbalance": {
+            "detected": 0,
+            "total": 1
+          },
+          "electrical_overload": {
+            "detected": 0,
+            "total": 1
+          },
+          "cavitation": {
+            "detected": 1,
+            "total": 1
+          }
+        }
+      },
+      "cost": {
+        "inference_latency": {
+          "n": 7179,
+          "mean_us": 1178.2369001253658,
+          "p50_us": 1178.791,
+          "p95_us": 1350.216899999999,
+          "p99_us": 1667.7769800000005,
+          "max_us": 65780.917
+        },
+        "pipeline_latency": {
+          "n": 7179,
+          "mean_us": 1341.615215907508,
+          "p50_us": 1341.042,
+          "p95_us": 1537.0458999999998,
+          "p99_us": 1917.2247400000008,
+          "max_us": 65946.5
+        },
+        "feature_latency": {
+          "n": 7179,
+          "mean_us": 161.6572673074244,
+          "p50_us": 159.917,
+          "p95_us": 187.17109999999997,
+          "p99_us": 272.97852000000034,
+          "max_us": 14819.167
+        },
+        "ingest_ns_per_sample_mean": 380.8571175,
+        "throughput_sps_mean": 323981.13904394023,
+        "realtime_factor_mean": 323.98113904394023,
+        "serialized_kib": 337.7666015625,
+        "n_parameters": 19005,
+        "load_rss_delta_kib": 0.0,
+        "scoring_peak_kib": 271.0048828125
+      }
+    },
+    "iforest50": {
+      "family": "iforest",
+      "runtime": "native",
+      "ablation": false,
+      "threshold": 0.6316790794728381,
+      "raise_after": 8,
+      "fit_s": 0.06143074994906783,
+      "per_seed": [
+        {
+          "seed": 101,
+          "window": {
+            "roc_auc": 0.8316046507024559,
+            "pr_auc": 0.7089840670361731,
+            "precision": 0.9094736842105263,
+            "recall": 0.28365068942875904,
+            "f1": 0.4324324324324324,
+            "positives": 1523,
+            "negatives": 3881
+          },
+          "event": {
+            "n_events": 5,
+            "n_detected": 2,
+            "n_alerts": 3,
+            "n_false_alarms": 1,
+            "event_recall": 0.4,
+            "alert_precision": 0.6666666666666666,
+            "event_f1": 0.5,
+            "false_alarms_per_hour": 1.8568875009307098,
+            "mean_delay_s": 18.315223575395862,
+            "detected_by_kind": {
+              "bearing_outer_race": {
+                "detected": 1,
+                "total": 1
+              },
+              "cooling_failure": {
+                "detected": 0,
+                "total": 1
+              },
+              "imbalance": {
+                "detected": 0,
+                "total": 1
+              },
+              "electrical_overload": {
+                "detected": 0,
+                "total": 1
+              },
+              "cavitation": {
+                "detected": 1,
+                "total": 1
+              }
+            }
+          }
+        }
+      ],
+      "window": {
+        "roc_auc": {
+          "mean": 0.8316046507024559,
+          "std": 0.0
+        },
+        "pr_auc": {
+          "mean": 0.7089840670361731,
+          "std": 0.0
+        },
+        "precision": {
+          "mean": 0.9094736842105263,
+          "std": 0.0
+        },
+        "recall": {
+          "mean": 0.28365068942875904,
+          "std": 0.0
+        },
+        "f1": {
+          "mean": 0.4324324324324324,
+          "std": 0.0
+        }
+      },
+      "event": {
+        "event_recall": {
+          "mean": 0.4,
+          "std": 0.0
+        },
+        "alert_precision": {
+          "mean": 0.6666666666666666,
+          "std": 0.0
+        },
+        "event_f1": {
+          "mean": 0.5,
+          "std": 0.0
+        },
+        "false_alarms_per_hour": {
+          "mean": 1.8568875009307098,
+          "std": 0.0
+        }
+      },
+      "pooled": {
+        "events": 5,
+        "detected": 2,
+        "alerts": 3,
+        "false_alarms": 1,
+        "event_recall": 0.4,
+        "alert_precision": 0.6666666666666666,
+        "mean_delay_s": 18.315223575395862,
+        "detected_by_kind": {
+          "bearing_outer_race": {
+            "detected": 1,
+            "total": 1
+          },
+          "cooling_failure": {
+            "detected": 0,
+            "total": 1
+          },
+          "imbalance": {
+            "detected": 0,
+            "total": 1
+          },
+          "electrical_overload": {
+            "detected": 0,
+            "total": 1
+          },
+          "cavitation": {
+            "detected": 1,
+            "total": 1
+          }
+        }
+      },
+      "cost": {
+        "inference_latency": {
+          "n": 7179,
+          "mean_us": 1603.486391558713,
+          "p50_us": 1586.334,
+          "p95_us": 2211.2916999999998,
+          "p99_us": 2643.31296,
+          "max_us": 29950.542
+        },
+        "pipeline_latency": {
+          "n": 7179,
+          "mean_us": 1731.3554490876165,
+          "p50_us": 1711.584,
+          "p95_us": 2392.8454999999994,
+          "p99_us": 2879.84976,
+          "max_us": 30516.75
+        },
+        "feature_latency": {
+          "n": 7179,
+          "mean_us": 126.47507967683521,
+          "p50_us": 123.125,
+          "p95_us": 179.4336999999999,
+          "p99_us": 260.58776000000006,
+          "max_us": 2461.375
+        },
+        "ingest_ns_per_sample_mean": 300.63973833333336,
+        "throughput_sps_mean": 264255.22275997576,
+        "realtime_factor_mean": 264.25522275997577,
+        "serialized_kib": 664.9599609375,
+        "n_parameters": 37480,
+        "load_rss_delta_kib": 0.0,
+        "scoring_peak_kib": 271.0908203125
+      }
+    },
+    "iforest200": {
+      "family": "iforest",
+      "runtime": "native",
+      "ablation": false,
+      "threshold": 0.6356680908722296,
+      "raise_after": 8,
+      "fit_s": 0.24144870904274285,
+      "per_seed": [
+        {
+          "seed": 101,
+          "window": {
+            "roc_auc": 0.8357611360834464,
+            "pr_auc": 0.6864399618315411,
+            "precision": 0.8857142857142857,
+            "recall": 0.2442547603414314,
+            "f1": 0.38291302110138964,
+            "positives": 1523,
+            "negatives": 3881
+          },
+          "event": {
+            "n_events": 5,
+            "n_detected": 2,
+            "n_alerts": 6,
+            "n_false_alarms": 2,
+            "event_recall": 0.4,
+            "alert_precision": 0.6666666666666666,
+            "event_f1": 0.5,
+            "false_alarms_per_hour": 3.7137750018614195,
+            "mean_delay_s": 23.815223575395862,
+            "detected_by_kind": {
+              "bearing_outer_race": {
+                "detected": 1,
+                "total": 1
+              },
+              "cooling_failure": {
+                "detected": 0,
+                "total": 1
+              },
+              "imbalance": {
+                "detected": 0,
+                "total": 1
+              },
+              "electrical_overload": {
+                "detected": 0,
+                "total": 1
+              },
+              "cavitation": {
+                "detected": 1,
+                "total": 1
+              }
+            }
+          }
+        }
+      ],
+      "window": {
+        "roc_auc": {
+          "mean": 0.8357611360834464,
+          "std": 0.0
+        },
+        "pr_auc": {
+          "mean": 0.6864399618315411,
+          "std": 0.0
+        },
+        "precision": {
+          "mean": 0.8857142857142857,
+          "std": 0.0
+        },
+        "recall": {
+          "mean": 0.2442547603414314,
+          "std": 0.0
+        },
+        "f1": {
+          "mean": 0.38291302110138964,
+          "std": 0.0
+        }
+      },
+      "event": {
+        "event_recall": {
+          "mean": 0.4,
+          "std": 0.0
+        },
+        "alert_precision": {
+          "mean": 0.6666666666666666,
+          "std": 0.0
+        },
+        "event_f1": {
+          "mean": 0.5,
+          "std": 0.0
+        },
+        "false_alarms_per_hour": {
+          "mean": 3.7137750018614195,
+          "std": 0.0
+        }
+      },
+      "pooled": {
+        "events": 5,
+        "detected": 2,
+        "alerts": 6,
+        "false_alarms": 2,
+        "event_recall": 0.4,
+        "alert_precision": 0.6666666666666666,
+        "mean_delay_s": 23.815223575395862,
+        "detected_by_kind": {
+          "bearing_outer_race": {
+            "detected": 1,
+            "total": 1
+          },
+          "cooling_failure": {
+            "detected": 0,
+            "total": 1
+          },
+          "imbalance": {
+            "detected": 0,
+            "total": 1
+          },
+          "electrical_overload": {
+            "detected": 0,
+            "total": 1
+          },
+          "cavitation": {
+            "detected": 1,
+            "total": 1
+          }
+        }
+      },
+      "cost": {
+        "inference_latency": {
+          "n": 7179,
+          "mean_us": 6911.66118275526,
+          "p50_us": 4743.792,
+          "p95_us": 14442.3747,
+          "p99_us": 18455.730000000007,
+          "max_us": 104601.125
+        },
+        "pipeline_latency": {
+          "n": 7179,
+          "mean_us": 7089.627834935229,
+          "p50_us": 4853.5,
+          "p95_us": 14832.141999999998,
+          "p99_us": 18814.145760000003,
+          "max_us": 104821.708
+        },
+        "feature_latency": {
+          "n": 7179,
+          "mean_us": 175.01369118261596,
+          "p50_us": 109.333,
+          "p95_us": 323.7541,
+          "p99_us": 597.6457600000045,
+          "max_us": 10022.875
+        },
+        "ingest_ns_per_sample_mean": 367.20636138888887,
+        "throughput_sps_mean": 68729.64650860314,
+        "realtime_factor_mean": 68.72964650860314,
+        "serialized_kib": 2489.7958984375,
+        "n_parameters": 140280,
+        "load_rss_delta_kib": 3408.0,
+        "scoring_peak_kib": 268.9609375
+      }
+    },
+    "zscore-onnx": {
+      "family": "zscore",
+      "runtime": "onnxruntime",
+      "ablation": false,
+      "threshold": 7.986972784996021,
+      "raise_after": 10,
+      "fit_s": 0.001665708958171308,
+      "per_seed": [
+        {
+          "seed": 101,
+          "window": {
+            "roc_auc": 0.7714504032728092,
+            "pr_auc": 0.650312869801217,
+            "precision": 0.8458904109589042,
+            "recall": 0.16217990807616547,
+            "f1": 0.2721763085399449,
+            "positives": 1523,
+            "negatives": 3881
+          },
+          "event": {
+            "n_events": 5,
+            "n_detected": 2,
+            "n_alerts": 4,
+            "n_false_alarms": 2,
+            "event_recall": 0.4,
+            "alert_precision": 0.5,
+            "event_f1": 0.4444444444444445,
+            "false_alarms_per_hour": 3.7137750018614195,
+            "mean_delay_s": 172.80117347947532,
+            "detected_by_kind": {
+              "bearing_outer_race": {
+                "detected": 1,
+                "total": 1
+              },
+              "cooling_failure": {
+                "detected": 1,
+                "total": 1
+              },
+              "imbalance": {
+                "detected": 0,
+                "total": 1
+              },
+              "electrical_overload": {
+                "detected": 0,
+                "total": 1
+              },
+              "cavitation": {
+                "detected": 0,
+                "total": 1
+              }
+            }
+          }
+        }
+      ],
+      "window": {
+        "roc_auc": {
+          "mean": 0.7714504032728092,
+          "std": 0.0
+        },
+        "pr_auc": {
+          "mean": 0.650312869801217,
+          "std": 0.0
+        },
+        "precision": {
+          "mean": 0.8458904109589042,
+          "std": 0.0
+        },
+        "recall": {
+          "mean": 0.16217990807616547,
+          "std": 0.0
+        },
+        "f1": {
+          "mean": 0.2721763085399449,
+          "std": 0.0
+        }
+      },
+      "event": {
+        "event_recall": {
+          "mean": 0.4,
+          "std": 0.0
+        },
+        "alert_precision": {
+          "mean": 0.5,
+          "std": 0.0
+        },
+        "event_f1": {
+          "mean": 0.4444444444444445,
+          "std": 0.0
+        },
+        "false_alarms_per_hour": {
+          "mean": 3.7137750018614195,
+          "std": 0.0
+        }
+      },
+      "pooled": {
+        "events": 5,
+        "detected": 2,
+        "alerts": 4,
+        "false_alarms": 2,
+        "event_recall": 0.4,
+        "alert_precision": 0.5,
+        "mean_delay_s": 172.80117347947532,
+        "detected_by_kind": {
+          "bearing_outer_race": {
+            "detected": 1,
+            "total": 1
+          },
+          "cooling_failure": {
+            "detected": 1,
+            "total": 1
+          },
+          "imbalance": {
+            "detected": 0,
+            "total": 1
+          },
+          "electrical_overload": {
+            "detected": 0,
+            "total": 1
+          },
+          "cavitation": {
+            "detected": 0,
+            "total": 1
+          }
+        }
+      },
+      "cost": {
+        "inference_latency": {
+          "n": 7179,
+          "mean_us": 22.29021367878535,
+          "p50_us": 12.375,
+          "p95_us": 44.79519999999997,
+          "p99_us": 83.27500000000032,
+          "max_us": 5042.125
+        },
+        "pipeline_latency": {
+          "n": 7179,
+          "mean_us": 229.9611466778103,
+          "p50_us": 165.708,
+          "p95_us": 357.11309999999986,
+          "p99_us": 1315.9622400000055,
+          "max_us": 13394.833
+        },
+        "feature_latency": {
+          "n": 7179,
+          "mean_us": 206.2456400612899,
+          "p50_us": 151.333,
+          "p95_us": 300.13329999999996,
+          "p99_us": 1142.6222400000015,
+          "max_us": 13296.042
+        },
+        "ingest_ns_per_sample_mean": 506.36411805555554,
+        "throughput_sps_mean": 1009108.8423459,
+        "realtime_factor_mean": 1009.1088423459,
+        "serialized_kib": 0.2783203125,
+        "scoring_peak_kib": 2.408203125,
+        "paced": {
+          "seconds": 10.0,
+          "cpu_utilisation": 0.0028207588547115524,
+          "max_lateness_ms": 0.0
+        }
+      }
+    },
+    "pca-onnx": {
+      "family": "pca",
+      "runtime": "onnxruntime",
+      "ablation": false,
+      "threshold": 3.821796567440032,
+      "raise_after": 10,
+      "fit_s": 0.00409862503875047,
+      "per_seed": [
+        {
+          "seed": 101,
+          "window": {
+            "roc_auc": 0.8601938531455247,
+            "pr_auc": 0.7393828784585299,
+            "precision": 0.9331352154531947,
+            "recall": 0.412344057780696,
+            "f1": 0.5719489981785064,
+            "positives": 1523,
+            "negatives": 3881
+          },
+          "event": {
+            "n_events": 5,
+            "n_detected": 4,
+            "n_alerts": 6,
+            "n_false_alarms": 2,
+            "event_recall": 0.8,
+            "alert_precision": 0.6666666666666666,
+            "event_f1": 0.7272727272727272,
+            "false_alarms_per_hour": 3.7137750018614195,
+            "mean_delay_s": 92.58306198552071,
+            "detected_by_kind": {
+              "bearing_outer_race": {
+                "detected": 1,
+                "total": 1
+              },
+              "cooling_failure": {
+                "detected": 1,
+                "total": 1
+              },
+              "imbalance": {
+                "detected": 1,
+                "total": 1
+              },
+              "electrical_overload": {
+                "detected": 0,
+                "total": 1
+              },
+              "cavitation": {
+                "detected": 1,
+                "total": 1
+              }
+            }
+          }
+        }
+      ],
+      "window": {
+        "roc_auc": {
+          "mean": 0.8601938531455247,
+          "std": 0.0
+        },
+        "pr_auc": {
+          "mean": 0.7393828784585299,
+          "std": 0.0
+        },
+        "precision": {
+          "mean": 0.9331352154531947,
+          "std": 0.0
+        },
+        "recall": {
+          "mean": 0.412344057780696,
+          "std": 0.0
+        },
+        "f1": {
+          "mean": 0.5719489981785064,
+          "std": 0.0
+        }
+      },
+      "event": {
+        "event_recall": {
+          "mean": 0.8,
+          "std": 0.0
+        },
+        "alert_precision": {
+          "mean": 0.6666666666666666,
+          "std": 0.0
+        },
+        "event_f1": {
+          "mean": 0.7272727272727272,
+          "std": 0.0
+        },
+        "false_alarms_per_hour": {
+          "mean": 3.7137750018614195,
+          "std": 0.0
+        }
+      },
+      "pooled": {
+        "events": 5,
+        "detected": 4,
+        "alerts": 6,
+        "false_alarms": 2,
+        "event_recall": 0.8,
+        "alert_precision": 0.6666666666666666,
+        "mean_delay_s": 92.58306198552071,
+        "detected_by_kind": {
+          "bearing_outer_race": {
+            "detected": 1,
+            "total": 1
+          },
+          "cooling_failure": {
+            "detected": 1,
+            "total": 1
+          },
+          "imbalance": {
+            "detected": 1,
+            "total": 1
+          },
+          "electrical_overload": {
+            "detected": 0,
+            "total": 1
+          },
+          "cavitation": {
+            "detected": 1,
+            "total": 1
+          }
+        }
+      },
+      "cost": {
+        "inference_latency": {
+          "n": 7179,
+          "mean_us": 29.192807633375125,
+          "p50_us": 18.292,
+          "p95_us": 56.004199999999976,
+          "p99_us": 98.73052000000017,
+          "max_us": 5158.291
+        },
+        "pipeline_latency": {
+          "n": 7179,
+          "mean_us": 221.90836523192647,
+          "p50_us": 163.167,
+          "p95_us": 360.0749999999996,
+          "p99_us": 957.2537200000028,
+          "max_us": 8198.125
+        },
+        "feature_latency": {
+          "n": 7179,
+          "mean_us": 191.18210906811535,
+          "p50_us": 143.75,
+          "p95_us": 291.0332999999998,
+          "p99_us": 711.4862400000011,
+          "max_us": 7937.834
+        },
+        "ingest_ns_per_sample_mean": 487.7223416666667,
+        "throughput_sps_mean": 1043176.3698449647,
+        "realtime_factor_mean": 1043.1763698449647,
+        "serialized_kib": 1.037109375,
+        "scoring_peak_kib": 1.5439453125,
+        "paced": {
+          "seconds": 10.0,
+          "cpu_utilisation": 0.0033891342264070344,
+          "max_lateness_ms": 0.0
+        }
+      }
+    },
+    "iforest-onnx": {
+      "family": "iforest",
+      "runtime": "onnxruntime",
+      "ablation": false,
+      "threshold": 0.6357044398784621,
+      "raise_after": 8,
+      "fit_s": 0.11522499995771796,
+      "per_seed": [
+        {
+          "seed": 101,
+          "window": {
+            "roc_auc": 0.8428922797276764,
+            "pr_auc": 0.7090208352080264,
+            "precision": 0.8891402714932126,
+            "recall": 0.25804333552199604,
+            "f1": 0.4,
+            "positives": 1523,
+            "negatives": 3881
+          },
+          "event": {
+            "n_events": 5,
+            "n_detected": 2,
+            "n_alerts": 6,
+            "n_false_alarms": 2,
+            "event_recall": 0.4,
+            "alert_precision": 0.6666666666666666,
+            "event_f1": 0.5,
+            "false_alarms_per_hour": 3.7137750018614195,
+            "mean_delay_s": 19.315223575395862,
+            "detected_by_kind": {
+              "bearing_outer_race": {
+                "detected": 1,
+                "total": 1
+              },
+              "cooling_failure": {
+                "detected": 0,
+                "total": 1
+              },
+              "imbalance": {
+                "detected": 0,
+                "total": 1
+              },
+              "electrical_overload": {
+                "detected": 0,
+                "total": 1
+              },
+              "cavitation": {
+                "detected": 1,
+                "total": 1
+              }
+            }
+          }
+        }
+      ],
+      "window": {
+        "roc_auc": {
+          "mean": 0.8428922797276764,
+          "std": 0.0
+        },
+        "pr_auc": {
+          "mean": 0.7090208352080264,
+          "std": 0.0
+        },
+        "precision": {
+          "mean": 0.8891402714932126,
+          "std": 0.0
+        },
+        "recall": {
+          "mean": 0.25804333552199604,
+          "std": 0.0
+        },
+        "f1": {
+          "mean": 0.4,
+          "std": 0.0
+        }
+      },
+      "event": {
+        "event_recall": {
+          "mean": 0.4,
+          "std": 0.0
+        },
+        "alert_precision": {
+          "mean": 0.6666666666666666,
+          "std": 0.0
+        },
+        "event_f1": {
+          "mean": 0.5,
+          "std": 0.0
+        },
+        "false_alarms_per_hour": {
+          "mean": 3.7137750018614195,
+          "std": 0.0
+        }
+      },
+      "pooled": {
+        "events": 5,
+        "detected": 2,
+        "alerts": 6,
+        "false_alarms": 2,
+        "event_recall": 0.4,
+        "alert_precision": 0.6666666666666666,
+        "mean_delay_s": 19.315223575395862,
+        "detected_by_kind": {
+          "bearing_outer_race": {
+            "detected": 1,
+            "total": 1
+          },
+          "cooling_failure": {
+            "detected": 0,
+            "total": 1
+          },
+          "imbalance": {
+            "detected": 0,
+            "total": 1
+          },
+          "electrical_overload": {
+            "detected": 0,
+            "total": 1
+          },
+          "cavitation": {
+            "detected": 1,
+            "total": 1
+          }
+        }
+      },
+      "cost": {
+        "inference_latency": {
+          "n": 7179,
+          "mean_us": 1352.3629167014906,
+          "p50_us": 912.166,
+          "p95_us": 3023.2662999999966,
+          "p99_us": 5624.377260000005,
+          "max_us": 16855.25
+        },
+        "pipeline_latency": {
+          "n": 7179,
+          "mean_us": 1561.6618814598132,
+          "p50_us": 1061.542,
+          "p95_us": 3522.8663999999985,
+          "p99_us": 6059.727760000024,
+          "max_us": 17106.25
+        },
+        "feature_latency": {
+          "n": 7179,
+          "mean_us": 206.5606924362725,
+          "p50_us": 147.625,
+          "p95_us": 331.87919999999997,
+          "p99_us": 852.5377600000074,
+          "max_us": 8474.5
+        },
+        "ingest_ns_per_sample_mean": 491.49956333333324,
+        "throughput_sps_mean": 274839.6173170263,
+        "realtime_factor_mean": 274.8396173170263,
+        "serialized_kib": 860.5517578125,
+        "scoring_peak_kib": 1.486328125,
+        "paced": {
+          "seconds": 10.0,
+          "cpu_utilisation": 0.0066712777360569036,
+          "max_lateness_ms": 0.0
+        }
+      }
+    },
+    "autoencoder-onnx": {
+      "family": "autoencoder",
+      "runtime": "onnxruntime",
+      "ablation": false,
+      "threshold": 1.1226274001598342,
+      "raise_after": 8,
+      "fit_s": 4.449290500022471,
+      "per_seed": [
+        {
+          "seed": 101,
+          "window": {
+            "roc_auc": 0.8005766768182044,
+            "pr_auc": 0.7108360814139302,
+            "precision": 0.9530386740331491,
+            "recall": 0.4530531845042679,
+            "f1": 0.6141522029372496,
+            "positives": 1523,
+            "negatives": 3881
+          },
+          "event": {
+            "n_events": 5,
+            "n_detected": 3,
+            "n_alerts": 5,
+            "n_false_alarms": 1,
+            "event_recall": 0.6,
+            "alert_precision": 0.8,
+            "event_f1": 0.6857142857142857,
+            "false_alarms_per_hour": 1.8568875009307098,
+            "mean_delay_s": 8.394605326859997,
+            "detected_by_kind": {
+              "bearing_outer_race": {
+                "detected": 1,
+                "total": 1
+              },
+              "cooling_failure": {
+                "detected": 0,
+                "total": 1
+              },
+              "imbalance": {
+                "detected": 1,
+                "total": 1
+              },
+              "electrical_overload": {
+                "detected": 0,
+                "total": 1
+              },
+              "cavitation": {
+                "detected": 1,
+                "total": 1
+              }
+            }
+          }
+        }
+      ],
+      "window": {
+        "roc_auc": {
+          "mean": 0.8005766768182044,
+          "std": 0.0
+        },
+        "pr_auc": {
+          "mean": 0.7108360814139302,
+          "std": 0.0
+        },
+        "precision": {
+          "mean": 0.9530386740331491,
+          "std": 0.0
+        },
+        "recall": {
+          "mean": 0.4530531845042679,
+          "std": 0.0
+        },
+        "f1": {
+          "mean": 0.6141522029372496,
+          "std": 0.0
+        }
+      },
+      "event": {
+        "event_recall": {
+          "mean": 0.6,
+          "std": 0.0
+        },
+        "alert_precision": {
+          "mean": 0.8,
+          "std": 0.0
+        },
+        "event_f1": {
+          "mean": 0.6857142857142857,
+          "std": 0.0
+        },
+        "false_alarms_per_hour": {
+          "mean": 1.8568875009307098,
+          "std": 0.0
+        }
+      },
+      "pooled": {
+        "events": 5,
+        "detected": 3,
+        "alerts": 5,
+        "false_alarms": 1,
+        "event_recall": 0.6,
+        "alert_precision": 0.8,
+        "mean_delay_s": 8.394605326859997,
+        "detected_by_kind": {
+          "bearing_outer_race": {
+            "detected": 1,
+            "total": 1
+          },
+          "cooling_failure": {
+            "detected": 0,
+            "total": 1
+          },
+          "imbalance": {
+            "detected": 1,
+            "total": 1
+          },
+          "electrical_overload": {
+            "detected": 0,
+            "total": 1
+          },
+          "cavitation": {
+            "detected": 1,
+            "total": 1
+          }
+        }
+      },
+      "cost": {
+        "inference_latency": {
+          "n": 7179,
+          "mean_us": 29.18397367321354,
+          "p50_us": 18.75,
+          "p95_us": 51.18359999999991,
+          "p99_us": 103.61226000000048,
+          "max_us": 5466.0
+        },
+        "pipeline_latency": {
+          "n": 7179,
+          "mean_us": 235.1587201560106,
+          "p50_us": 179.917,
+          "p95_us": 358.75389999999976,
+          "p99_us": 1585.525260000004,
+          "max_us": 9599.334
+        },
+        "feature_latency": {
+          "n": 7179,
+          "mean_us": 204.40817244741606,
+          "p50_us": 158.625,
+          "p95_us": 287.0288999999996,
+          "p99_us": 1256.98200000001,
+          "max_us": 9493.959
+        },
+        "ingest_ns_per_sample_mean": 486.3170316666667,
+        "throughput_sps_mean": 1017255.3469629798,
+        "realtime_factor_mean": 1017.2553469629797,
+        "serialized_kib": 1.67578125,
+        "scoring_peak_kib": 1.341796875,
+        "paced": {
+          "seconds": 10.0,
+          "cpu_utilisation": 0.00327433350156298,
+          "max_lateness_ms": 0.0
+        }
+      }
+    },
+    "zscore-k3": {
+      "family": "zscore",
+      "runtime": "native",
+      "ablation": true,
+      "threshold": 7.986972680566649,
+      "raise_after": 3,
+      "fit_s": 0.001665708958171308,
+      "per_seed": [
+        {
+          "seed": 101,
+          "window": {
+            "roc_auc": 0.7714503186813615,
+            "pr_auc": 0.6503128472290932,
+            "precision": 0.8458904109589042,
+            "recall": 0.16217990807616547,
+            "f1": 0.2721763085399449,
+            "positives": 1523,
+            "negatives": 3881
+          },
+          "event": {
+            "n_events": 5,
+            "n_detected": 2,
+            "n_alerts": 7,
+            "n_false_alarms": 5,
+            "event_recall": 0.4,
+            "alert_precision": 0.2857142857142857,
+            "event_f1": 0.3333333333333333,
+            "false_alarms_per_hour": 9.28443750465355,
+            "mean_delay_s": 168.05117347947532,
+            "detected_by_kind": {
+              "bearing_outer_race": {
+                "detected": 1,
+                "total": 1
+              },
+              "cooling_failure": {
+                "detected": 1,
+                "total": 1
+              },
+              "imbalance": {
+                "detected": 0,
+                "total": 1
+              },
+              "electrical_overload": {
+                "detected": 0,
+                "total": 1
+              },
+              "cavitation": {
+                "detected": 0,
+                "total": 1
+              }
+            }
+          }
+        }
+      ],
+      "window": {
+        "roc_auc": {
+          "mean": 0.7714503186813615,
+          "std": 0.0
+        },
+        "pr_auc": {
+          "mean": 0.6503128472290932,
+          "std": 0.0
+        },
+        "precision": {
+          "mean": 0.8458904109589042,
+          "std": 0.0
+        },
+        "recall": {
+          "mean": 0.16217990807616547,
+          "std": 0.0
+        },
+        "f1": {
+          "mean": 0.2721763085399449,
+          "std": 0.0
+        }
+      },
+      "event": {
+        "event_recall": {
+          "mean": 0.4,
+          "std": 0.0
+        },
+        "alert_precision": {
+          "mean": 0.2857142857142857,
+          "std": 0.0
+        },
+        "event_f1": {
+          "mean": 0.3333333333333333,
+          "std": 0.0
+        },
+        "false_alarms_per_hour": {
+          "mean": 9.28443750465355,
+          "std": 0.0
+        }
+      },
+      "pooled": {
+        "events": 5,
+        "detected": 2,
+        "alerts": 7,
+        "false_alarms": 5,
+        "event_recall": 0.4,
+        "alert_precision": 0.2857142857142857,
+        "mean_delay_s": 168.05117347947532,
+        "detected_by_kind": {
+          "bearing_outer_race": {
+            "detected": 1,
+            "total": 1
+          },
+          "cooling_failure": {
+            "detected": 1,
+            "total": 1
+          },
+          "imbalance": {
+            "detected": 0,
+            "total": 1
+          },
+          "electrical_overload": {
+            "detected": 0,
+            "total": 1
+          },
+          "cavitation": {
+            "detected": 0,
+            "total": 1
+          }
+        }
+      },
+      "cost": {
+        "inference_latency": {
+          "n": 7179,
+          "mean_us": 9.914899846775315,
+          "p50_us": 7.791,
+          "p95_us": 12.75,
+          "p99_us": 18.69372000000003,
+          "max_us": 7054.083
+        },
+        "pipeline_latency": {
+          "n": 7179,
+          "mean_us": 223.21124014486693,
+          "p50_us": 177.916,
+          "p95_us": 299.6463999999997,
+          "p99_us": 1271.0125000000035,
+          "max_us": 50194.5
+        },
+        "feature_latency": {
+          "n": 7179,
+          "mean_us": 211.17377531689652,
+          "p50_us": 168.833,
+          "p95_us": 280.6785999999999,
+          "p99_us": 1157.6044800000075,
+          "max_us": 50170.875
+        },
+        "ingest_ns_per_sample_mean": 499.74907222222225,
+        "throughput_sps_mean": 1029024.4321579975,
+        "realtime_factor_mean": 1029.0244321579976,
+        "serialized_kib": 0.4345703125,
+        "n_parameters": 24,
+        "load_rss_delta_kib": 112.0,
+        "scoring_peak_kib": 1.5625
+      }
+    },
+    "pca-k3": {
+      "family": "pca",
+      "runtime": "native",
+      "ablation": true,
+      "threshold": 3.8217956528177304,
+      "raise_after": 3,
+      "fit_s": 0.00409862503875047,
+      "per_seed": [
+        {
+          "seed": 101,
+          "window": {
+            "roc_auc": 0.8601936839626289,
+            "pr_auc": 0.7393826092301768,
+            "precision": 0.9331352154531947,
+            "recall": 0.412344057780696,
+            "f1": 0.5719489981785064,
+            "positives": 1523,
+            "negatives": 3881
+          },
+          "event": {
+            "n_events": 5,
+            "n_detected": 4,
+            "n_alerts": 9,
+            "n_false_alarms": 5,
+            "event_recall": 0.8,
+            "alert_precision": 0.4444444444444444,
+            "event_f1": 0.5714285714285714,
+            "false_alarms_per_hour": 9.28443750465355,
+            "mean_delay_s": 83.70806198552071,
+            "detected_by_kind": {
+              "bearing_outer_race": {
+                "detected": 1,
+                "total": 1
+              },
+              "cooling_failure": {
+                "detected": 1,
+                "total": 1
+              },
+              "imbalance": {
+                "detected": 1,
+                "total": 1
+              },
+              "electrical_overload": {
+                "detected": 0,
+                "total": 1
+              },
+              "cavitation": {
+                "detected": 1,
+                "total": 1
+              }
+            }
+          }
+        }
+      ],
+      "window": {
+        "roc_auc": {
+          "mean": 0.8601936839626289,
+          "std": 0.0
+        },
+        "pr_auc": {
+          "mean": 0.7393826092301768,
+          "std": 0.0
+        },
+        "precision": {
+          "mean": 0.9331352154531947,
+          "std": 0.0
+        },
+        "recall": {
+          "mean": 0.412344057780696,
+          "std": 0.0
+        },
+        "f1": {
+          "mean": 0.5719489981785064,
+          "std": 0.0
+        }
+      },
+      "event": {
+        "event_recall": {
+          "mean": 0.8,
+          "std": 0.0
+        },
+        "alert_precision": {
+          "mean": 0.4444444444444444,
+          "std": 0.0
+        },
+        "event_f1": {
+          "mean": 0.5714285714285714,
+          "std": 0.0
+        },
+        "false_alarms_per_hour": {
+          "mean": 9.28443750465355,
+          "std": 0.0
+        }
+      },
+      "pooled": {
+        "events": 5,
+        "detected": 4,
+        "alerts": 9,
+        "false_alarms": 5,
+        "event_recall": 0.8,
+        "alert_precision": 0.4444444444444444,
+        "mean_delay_s": 83.70806198552071,
+        "detected_by_kind": {
+          "bearing_outer_race": {
+            "detected": 1,
+            "total": 1
+          },
+          "cooling_failure": {
+            "detected": 1,
+            "total": 1
+          },
+          "imbalance": {
+            "detected": 1,
+            "total": 1
+          },
+          "electrical_overload": {
+            "detected": 0,
+            "total": 1
+          },
+          "cavitation": {
+            "detected": 1,
+            "total": 1
+          }
+        }
+      },
+      "cost": {
+        "inference_latency": {
+          "n": 7179,
+          "mean_us": 23.447302270511212,
+          "p50_us": 16.875,
+          "p95_us": 29.796099999999978,
+          "p99_us": 53.722000000000065,
+          "max_us": 4550.0
+        },
+        "pipeline_latency": {
+          "n": 7179,
+          "mean_us": 223.26403454520127,
+          "p50_us": 168.542,
+          "p95_us": 319.8252999999998,
+          "p99_us": 1280.08122,
+          "max_us": 12900.25
+        },
+        "feature_latency": {
+          "n": 7179,
+          "mean_us": 198.35333500487533,
+          "p50_us": 149.875,
+          "p95_us": 279.34549999999996,
+          "p99_us": 1050.8260200000018,
+          "max_us": 12854.458
+        },
+        "ingest_ns_per_sample_mean": 473.06659277777777,
+        "throughput_sps_mean": 1058800.4070954218,
+        "realtime_factor_mean": 1058.8004070954219,
+        "serialized_kib": 0.97265625,
+        "n_parameters": 78,
+        "load_rss_delta_kib": 96.0,
+        "scoring_peak_kib": 2.1328125
+      }
+    },
+    "iforest-k3": {
+      "family": "iforest",
+      "runtime": "native",
+      "ablation": true,
+      "threshold": 0.6357044508280947,
+      "raise_after": 3,
+      "fit_s": 0.11522499995771796,
+      "per_seed": [
+        {
+          "seed": 101,
+          "window": {
+            "roc_auc": 0.8428921951362285,
+            "pr_auc": 0.7090208352080265,
+            "precision": 0.8891402714932126,
+            "recall": 0.25804333552199604,
+            "f1": 0.4,
+            "positives": 1523,
+            "negatives": 3881
+          },
+          "event": {
+            "n_events": 5,
+            "n_detected": 4,
+            "n_alerts": 13,
+            "n_false_alarms": 7,
+            "event_recall": 0.8,
+            "alert_precision": 0.46153846153846156,
+            "event_f1": 0.5853658536585367,
+            "false_alarms_per_hour": 12.99821250651497,
+            "mean_delay_s": 105.58306198552071,
+            "detected_by_kind": {
+              "bearing_outer_race": {
+                "detected": 1,
+                "total": 1
+              },
+              "cooling_failure": {
+                "detected": 1,
+                "total": 1
+              },
+              "imbalance": {
+                "detected": 1,
+                "total": 1
+              },
+              "electrical_overload": {
+                "detected": 0,
+                "total": 1
+              },
+              "cavitation": {
+                "detected": 1,
+                "total": 1
+              }
+            }
+          }
+        }
+      ],
+      "window": {
+        "roc_auc": {
+          "mean": 0.8428921951362285,
+          "std": 0.0
+        },
+        "pr_auc": {
+          "mean": 0.7090208352080265,
+          "std": 0.0
+        },
+        "precision": {
+          "mean": 0.8891402714932126,
+          "std": 0.0
+        },
+        "recall": {
+          "mean": 0.25804333552199604,
+          "std": 0.0
+        },
+        "f1": {
+          "mean": 0.4,
+          "std": 0.0
+        }
+      },
+      "event": {
+        "event_recall": {
+          "mean": 0.8,
+          "std": 0.0
+        },
+        "alert_precision": {
+          "mean": 0.46153846153846156,
+          "std": 0.0
+        },
+        "event_f1": {
+          "mean": 0.5853658536585367,
+          "std": 0.0
+        },
+        "false_alarms_per_hour": {
+          "mean": 12.99821250651497,
+          "std": 0.0
+        }
+      },
+      "pooled": {
+        "events": 5,
+        "detected": 4,
+        "alerts": 13,
+        "false_alarms": 7,
+        "event_recall": 0.8,
+        "alert_precision": 0.46153846153846156,
+        "mean_delay_s": 105.58306198552071,
+        "detected_by_kind": {
+          "bearing_outer_race": {
+            "detected": 1,
+            "total": 1
+          },
+          "cooling_failure": {
+            "detected": 1,
+            "total": 1
+          },
+          "imbalance": {
+            "detected": 1,
+            "total": 1
+          },
+          "electrical_overload": {
+            "detected": 0,
+            "total": 1
+          },
+          "cavitation": {
+            "detected": 1,
+            "total": 1
+          }
+        }
+      },
+      "cost": {
+        "inference_latency": {
+          "n": 7179,
+          "mean_us": 5840.199881877699,
+          "p50_us": 5020.583,
+          "p95_us": 11135.79229999999,
+          "p99_us": 18099.019740000036,
+          "max_us": 211927.875
+        },
+        "pipeline_latency": {
+          "n": 7179,
+          "mean_us": 6126.316802479454,
+          "p50_us": 5297.0,
+          "p95_us": 11612.000299999983,
+          "p99_us": 18627.728020000006,
+          "max_us": 212495.041
+        },
+        "feature_latency": {
+          "n": 7179,
+          "mean_us": 280.7568336815712,
+          "p50_us": 229.25,
+          "p95_us": 401.42119999999994,
+          "p99_us": 1846.1155000000058,
+          "max_us": 11887.333
+        },
+        "ingest_ns_per_sample_mean": 597.5562822222222,
+        "throughput_sps_mean": 77654.07967154526,
+        "realtime_factor_mean": 77.65407967154526,
+        "serialized_kib": 1252.66796875,
+        "n_parameters": 70550,
+        "load_rss_delta_kib": 2576.0,
+        "scoring_peak_kib": 268.826171875
+      }
+    },
+    "autoencoder-k3": {
+      "family": "autoencoder",
+      "runtime": "native",
+      "ablation": true,
+      "threshold": 1.122628792354744,
+      "raise_after": 3,
+      "fit_s": 4.449290500022471,
+      "per_seed": [
+        {
+          "seed": 101,
+          "window": {
+            "roc_auc": 0.8005760000866217,
+            "pr_auc": 0.7108357658976415,
+            "precision": 0.9530386740331491,
+            "recall": 0.4530531845042679,
+            "f1": 0.6141522029372496,
+            "positives": 1523,
+            "negatives": 3881
+          },
+          "event": {
+            "n_events": 5,
+            "n_detected": 3,
+            "n_alerts": 9,
+            "n_false_alarms": 5,
+            "event_recall": 0.6,
+            "alert_precision": 0.4444444444444444,
+            "event_f1": 0.5106382978723405,
+            "false_alarms_per_hour": 9.28443750465355,
+            "mean_delay_s": 5.894605326859998,
+            "detected_by_kind": {
+              "bearing_outer_race": {
+                "detected": 1,
+                "total": 1
+              },
+              "cooling_failure": {
+                "detected": 0,
+                "total": 1
+              },
+              "imbalance": {
+                "detected": 1,
+                "total": 1
+              },
+              "electrical_overload": {
+                "detected": 0,
+                "total": 1
+              },
+              "cavitation": {
+                "detected": 1,
+                "total": 1
+              }
+            }
+          }
+        }
+      ],
+      "window": {
+        "roc_auc": {
+          "mean": 0.8005760000866217,
+          "std": 0.0
+        },
+        "pr_auc": {
+          "mean": 0.7108357658976415,
+          "std": 0.0
+        },
+        "precision": {
+          "mean": 0.9530386740331491,
+          "std": 0.0
+        },
+        "recall": {
+          "mean": 0.4530531845042679,
+          "std": 0.0
+        },
+        "f1": {
+          "mean": 0.6141522029372496,
+          "std": 0.0
+        }
+      },
+      "event": {
+        "event_recall": {
+          "mean": 0.6,
+          "std": 0.0
+        },
+        "alert_precision": {
+          "mean": 0.4444444444444444,
+          "std": 0.0
+        },
+        "event_f1": {
+          "mean": 0.5106382978723405,
+          "std": 0.0
+        },
+        "false_alarms_per_hour": {
+          "mean": 9.28443750465355,
+          "std": 0.0
+        }
+      },
+      "pooled": {
+        "events": 5,
+        "detected": 3,
+        "alerts": 9,
+        "false_alarms": 5,
+        "event_recall": 0.6,
+        "alert_precision": 0.4444444444444444,
+        "mean_delay_s": 5.894605326859998,
+        "detected_by_kind": {
+          "bearing_outer_race": {
+            "detected": 1,
+            "total": 1
+          },
+          "cooling_failure": {
+            "detected": 0,
+            "total": 1
+          },
+          "imbalance": {
+            "detected": 1,
+            "total": 1
+          },
+          "electrical_overload": {
+            "detected": 0,
+            "total": 1
+          },
+          "cavitation": {
+            "detected": 1,
+            "total": 1
+          }
+        }
+      },
+      "cost": {
+        "inference_latency": {
+          "n": 7179,
+          "mean_us": 22.329285555091236,
+          "p50_us": 19.0,
+          "p95_us": 35.041,
+          "p99_us": 60.836980000000054,
+          "max_us": 1813.917
+        },
+        "pipeline_latency": {
+          "n": 7179,
+          "mean_us": 175.12451608859175,
+          "p50_us": 145.916,
+          "p95_us": 275.6171999999998,
+          "p99_us": 422.4202400000006,
+          "max_us": 30023.375
+        },
+        "feature_latency": {
+          "n": 7179,
+          "mean_us": 151.6191060036217,
+          "p50_us": 125.833,
+          "p95_us": 234.1877999999999,
+          "p99_us": 364.9289800000007,
+          "max_us": 29793.375
+        },
+        "ingest_ns_per_sample_mean": 362.59344138888883,
+        "throughput_sps_mean": 1365902.8004143925,
+        "realtime_factor_mean": 1365.9028004143925,
+        "serialized_kib": 2.8271484375,
+        "n_parameters": 295,
+        "load_rss_delta_kib": 80.0,
+        "scoring_peak_kib": 2.1953125
+      }
+    }
+  },
+  "wall_clock_s": 321.3634440898895
+}
