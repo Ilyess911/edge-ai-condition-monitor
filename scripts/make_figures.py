@@ -23,7 +23,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from src.benchmarking import simulated_track as st  # noqa: E402
 from src.config import ROOT, load_config  # noqa: E402
-from src.data.simulator import CHANNELS, FaultEvent, simulate  # noqa: E402
+from src.data.simulator import FaultEvent, simulate  # noqa: E402
 
 ASSETS = ROOT / "assets"
 RESULTS = ROOT / "results"
@@ -291,27 +291,36 @@ def fig_tradeoff(bench):
 # ----------------------------------------------------------------------------- sampling rate
 def fig_sampling(sweep):
     rates = [str(r) for r in sweep["rates_hz"]]
-    fig, (a1, a2) = plt.subplots(1, 2, figsize=(11, 3.4))
+    fig, (a1, a2, a3) = plt.subplots(1, 3, figsize=(12, 3.4))
     for name, color in FAMILY.items():
-        rec = [sweep["results"][r][name]["event_recall"] for r in rates]
-        a1.plot(rates, rec, "-o", color=color, lw=2, ms=6, label=LABEL[name])
-    a1.set(title="Event recall vs ADC sampling rate", xlabel="sampling rate [Hz]",
-           ylabel="event recall", ylim=(0, 1.05))
+        res = [sweep["results"][r][name] for r in rates]
+        a1.plot(rates, [r["event_recall"] for r in res], "-o", color=color, lw=2, ms=6,
+                label=LABEL[name])
+        # Z-score and PCA can share values: draw z-score dashed on top so both stay visible.
+        a2.plot(rates, [r["false_alarms"] for r in res], "--o" if name == "zscore" else "-o",
+                color=color, lw=2, ms=6 if name != "zscore" else 4, zorder=3 if name == "zscore" else 2)
+    a1.set(title="Faults detected (recall)", xlabel="sampling rate [Hz]", ylabel="event recall",
+           ylim=(0, 1.05))
     a1.legend(fontsize=7.5, loc="lower right")
+    a2.set(title="False alarms, 5 test runs", xlabel="sampling rate [Hz]", ylabel="count")
+    a2.set_ylim(bottom=0)
     feat = [sweep["results"][r]["pca"]["feature_latency"]["p50_us"] for r in rates]
     ingest = [sweep["results"][r]["pca"]["ingest_ns_per_sample"] * int(r) / 1e3 for r in rates]
-    a2.plot(rates, feat, "-o", color=INK, lw=2, ms=6, label="feature extraction per window")
-    a2.plot(rates, ingest, "-s", color=INK2, lw=2, ms=6, label="ingest per second of signal")
-    a2.set(title="Edge cost vs sampling rate (PCA pipeline)", xlabel="sampling rate [Hz]",
-           ylabel="p50 [µs]")
-    a2.legend(fontsize=7.5)
+    a3.plot(rates, feat, "-o", color=INK, lw=2, ms=6, label="features, per window (p50)")
+    a3.plot(rates, ingest, "-s", color=INK2, lw=2, ms=6, label="ingest, per second of signal (mean)")
+    a3.set(title="Pipeline cost (PCA)", xlabel="sampling rate [Hz]", ylabel="µs")
+    a3.set_ylim(bottom=0)
+    a3.legend(fontsize=7.5, loc="lower right")
+    fig.suptitle("SIMULATED sampling-rate sweep: same window duration, detectors refitted per rate",
+                 x=0.01, ha="left", fontsize=10, fontweight="bold", y=1.03)
     save(fig, "sampling_rate_tradeoff.png")
 
 
 # ----------------------------------------------------------------------------- MetroPT
 def fig_metropt(mb):
     names = ["zscore", "pca", "iforest", "autoencoder"]
-    fig, axes = plt.subplots(len(names), 1, figsize=(11, 6.4), sharex=True)
+    fig, axes = plt.subplots(len(names), 1, figsize=(11, 7.4), sharex=True)
+    fig.subplots_adjust(hspace=0.45)
     for ax, name in zip(axes, names):
         z = np.load(RESULTS / "traces" / f"metropt_{name}.npz")
         t = z["t"] / 86400
@@ -328,13 +337,14 @@ def fig_metropt(mb):
         r = mb["results"][name]
         ax.set_ylim(0, 6)
         ax.set_ylabel(LABEL[name], rotation=0, ha="right", va="center")
-        ax.text(1.0, 0.72, f"{r['event_strict']['n_detected']}/4 reports (chance "
-                f"{r['chance']['chance_mean']:.1f}, p={r['chance']['p_value']:.2f}) · "
-                f"{r['false_alarms_per_day']:.2f} false alarms/day · "
-                f"{100 * r['alarm_time_fraction_healthy']:.0f} % of healthy time in alarm",
-                transform=ax.transAxes, ha="right", fontsize=7.5, color=INK2)
-    axes[0].set_title("MetroPT-3 (REAL compressor data), test period Apr-Aug 2020. Grey = company "
-                      "failure report, red bars = alerts", loc="left")
+        ax.set_title(f"{r['event_strict']['n_detected']}/4 reports (chance "
+                     f"{r['chance']['chance_mean']:.1f}, p = {r['chance']['p_value']:.3f}) · "
+                     f"{r['false_alarms_per_day']:.2f} false alarms/day · "
+                     f"{100 * r['alarm_time_fraction_healthy']:.1f} % of healthy time in alarm",
+                     loc="right", fontsize=7.5, color=INK2, fontweight="normal")
+    fig.suptitle("MetroPT-3 (REAL compressor data), test period Apr-Aug 2020. Grey = company "
+                 "failure report, red bars = alerts, dashed = threshold", x=0.01, ha="left",
+                 fontsize=10, fontweight="bold")
     axes[-1].set_xlabel("days since 2020-04-01")
     save(fig, "metropt_timeline.png")
 
