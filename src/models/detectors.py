@@ -174,7 +174,7 @@ class AutoencoderDetector(Detector):
         mlp = MLPRegressor(
             hidden_layer_sizes=self.hidden,
             activation="tanh",
-            max_iter=800,
+            max_iter=3000,
             early_stopping=True,
             validation_fraction=0.15,
             n_iter_no_change=25,

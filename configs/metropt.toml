@@ -1,0 +1,51 @@
+# MetroPT-3 real-data track. Fixed before the first detector evaluation on the
+# test period (JOURNAL.md, 2026-09-14). The split is chronological: no data from
+# the future is ever used to fit or calibrate.
+
+[split]
+train_start = "2020-02-01 00:00"
+train_end   = "2020-03-15 00:00"   # 6 weeks, no failure report
+calib_start = "2020-03-15 00:00"
+calib_end   = "2020-04-01 00:00"   # 2.5 weeks, no failure report
+test_start  = "2020-04-01 00:00"
+test_end    = "2020-09-01 04:00"   # all four failure reports fall here
+
+[stream]
+window = 180        # samples at 0.1 Hz = 30 min
+hop = 30            # one decision every 5 min
+chunk = 30          # a gateway uploading every 5 min
+max_hold = 3        # hold a missing value for at most 30 s
+min_coverage = 0.8  # skip windows with more than 20 % missing samples
+
+[cleaning]
+# 7 analog channels (bar, degC, A) then 8 digital channels (0/1)
+low  = [-1.0, -1.0, -1.0, -1.0, -1.0,   0.0,  0.0, 0, 0, 0, 0, 0, 0, 0, 0]
+high = [15.0, 15.0, 15.0, 15.0, 15.0, 120.0, 15.0, 1, 1, 1, 1, 1, 1, 1, 1]
+
+[threshold]
+quantile = 0.995
+
+[alerts]
+raise_after = "auto"
+max_raise_after = 12   # 12 windows = 1 h worst-case added delay
+clear_after = 6
+
+[evaluation]
+grace_s = 0.0
+early_warning_s = 7200.0   # second view: an alert up to 2 h before a report also counts
+
+[models.zscore]
+detector = "zscore"
+
+[models.pca]
+detector = "pca"
+variance = 0.95
+
+[models.iforest]
+detector = "iforest"
+n_estimators = 100
+max_samples = 256
+
+[models.autoencoder]
+detector = "autoencoder"
+hidden = [8, 3, 8]

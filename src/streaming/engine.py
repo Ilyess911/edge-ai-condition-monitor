@@ -3,7 +3,7 @@
     chunk of raw samples
       -> SampleCleaner        (plausibility check, sample-and-hold)
       -> SlidingWindow        (circular buffer, emits every `hop` samples)
-      -> feature extractor    (one feature vector per window)
+      -> feature extractor    (one feature vector per window, or None to skip it)
       -> detector.score       (one anomaly score per window)
       -> AlertEngine          (persistence + hysteresis)
 
@@ -90,8 +90,10 @@ class StreamingEngine:
         self.alerts = alerts
         self.keep_features = keep_features
         self.features: list[np.ndarray] = []
+        self.skipped_windows = 0
 
     def reset(self) -> None:
+        self.skipped_windows = 0
         self.cleaner.reset()
         self.windower.reset()
         self.features.clear()
@@ -109,6 +111,9 @@ class StreamingEngine:
         for end_idx, w in emitted:
             a = clock()
             f = self.extractor(w)
+            if f is None:  # extractor refused the window (e.g. too much missing data)
+                self.skipped_windows += 1
+                continue
             b = clock()
             s = float(self.detector.score(f[None, :])[0])
             c = clock()

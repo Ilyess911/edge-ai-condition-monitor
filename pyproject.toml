@@ -15,7 +15,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-onnx = ["skl2onnx>=1.17", "onnxruntime>=1.18"]
+onnx = ["onnx>=1.16", "skl2onnx>=1.17", "onnxruntime>=1.18"]
 viz = ["matplotlib>=3.8"]
 dashboard = ["streamlit>=1.36"]
 

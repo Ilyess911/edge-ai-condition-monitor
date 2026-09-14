@@ -443,6 +443,7 @@ dashboard = [
     { name = "streamlit" },
 ]
 onnx = [
+    { name = "onnx" },
     { name = "onnxruntime" },
     { name = "skl2onnx" },
 ]
@@ -460,6 +461,7 @@ dev = [
 requires-dist = [
     { name = "matplotlib", marker = "extra == 'viz'", specifier = ">=3.8" },
     { name = "numpy", specifier = ">=1.26" },
+    { name = "onnx", marker = "extra == 'onnx'", specifier = ">=1.16" },
     { name = "onnxruntime", marker = "extra == 'onnx'", specifier = ">=1.18" },
     { name = "pandas", specifier = ">=2.1" },
     { name = "psutil", specifier = ">=5.9" },

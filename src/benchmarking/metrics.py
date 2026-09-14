@@ -33,7 +33,8 @@ def aftermath_mask(t_end: np.ndarray, y: np.ndarray, events, recovery_s: float) 
     """True for healthy-labelled windows ending within recovery_s after a fault."""
     mask = np.zeros(len(t_end), dtype=bool)
     for ev in events:
-        mask |= (t_end > ev.end_s) & (t_end <= ev.end_s + recovery_s)
+        rec = getattr(ev, "recovery_s", recovery_s)
+        mask |= (t_end > ev.end_s) & (t_end <= ev.end_s + rec)
     return mask & (y == 0)
 
 
@@ -85,20 +86,27 @@ class EventMetrics:
 
 
 def event_metrics(
-    events, alerts, duration_s: float, grace_s: float, recovery_s: float = 0.0
+    events, alerts, duration_s: float, grace_s: float, recovery_s: float = 0.0,
+    lead_s: float = 0.0,
 ) -> EventMetrics:
-    """events: objects with kind/start_s/end_s. alerts: objects with start_t/end_t."""
+    """events: objects with kind/start_s/end_s (and optionally their own recovery_s).
+    alerts: objects with start_t/end_t.
+
+    lead_s > 0 also credits an alert raised up to lead_s BEFORE the reported
+    start (early warning). The simulated track uses 0: its onset is exact.
+    """
     spans = [(a.start_t, a.end_t if a.end_t is not None else duration_s) for a in alerts]
     matched_alert = np.zeros(len(spans), dtype=bool)
     excused = np.zeros(len(spans), dtype=bool)  # starts inside an aftermath
     for ev in events:
+        rec = getattr(ev, "recovery_s", recovery_s)
         for i, (a, _) in enumerate(spans):
-            if ev.end_s < a <= ev.end_s + recovery_s:
+            if ev.end_s < a <= ev.end_s + rec:
                 excused[i] = True
     delays = []
     by_kind: dict[str, list[int]] = {}
     for ev in events:
-        lo, hi = ev.start_s, ev.end_s + grace_s
+        lo, hi = ev.start_s - lead_s, ev.end_s + grace_s
         hit = [i for i, (a, b) in enumerate(spans) if a <= hi and b >= lo]
         by_kind.setdefault(ev.kind, [0, 0])
         by_kind[ev.kind][1] += 1
@@ -111,7 +119,8 @@ def event_metrics(
     excused &= ~matched_alert
     n_false = int((~matched_alert & ~excused).sum())
     counted = matched_alert | ~excused
-    busy = sum(min(ev.end_s + recovery_s, duration_s) - ev.start_s for ev in events)
+    busy = sum(min(ev.end_s + getattr(ev, "recovery_s", recovery_s), duration_s)
+               - max(ev.start_s - lead_s, 0.0) for ev in events)
     healthy_h = max(duration_s - busy, 1e-9) / 3600
     recall = n_detected / n_events if n_events else float("nan")
     precision = float(matched_alert[counted].mean()) if counted.any() else 0.0

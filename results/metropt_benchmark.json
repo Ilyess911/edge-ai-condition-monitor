@@ -1,0 +1,501 @@
+{
+  "generated": "2026-09-14 22:14:42",
+  "config": "configs/metropt.toml",
+  "train_windows": 10371,
+  "calib_windows": 4159,
+  "test_hours": 3676.0,
+  "environment_start": {
+    "platform": "macOS-26.5.2-arm64-arm-64bit",
+    "machine": "arm64",
+    "cpu": "Apple M4",
+    "logical_cpus": 10,
+    "ram_gib": 24.0,
+    "python": "3.12.13",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "sklearn": "1.9.1",
+    "onnxruntime": "1.30.0",
+    "load_average_1_5_15": [
+      9.76,
+      11.17,
+      9.86
+    ],
+    "thread_env": {
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1"
+    },
+    "note": "Development laptop, NOT an edge device. See docs/hardware_deployment.md."
+  },
+  "environment": {
+    "platform": "macOS-26.5.2-arm64-arm-64bit",
+    "machine": "arm64",
+    "cpu": "Apple M4",
+    "logical_cpus": 10,
+    "ram_gib": 24.0,
+    "python": "3.12.13",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "sklearn": "1.9.1",
+    "onnxruntime": "1.30.0",
+    "load_average_1_5_15": [
+      12.88,
+      12.09,
+      10.56
+    ],
+    "thread_env": {
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1"
+    },
+    "note": "Development laptop, NOT an edge device. See docs/hardware_deployment.md."
+  },
+  "results": {
+    "zscore": {
+      "threshold": 7.94550366634507,
+      "raise_after": 9,
+      "window": {
+        "roc_auc": 0.9524479504488825,
+        "pr_auc": 0.2332976900381959,
+        "precision": 0.1353854923756591,
+        "recall": 0.9625126646403243,
+        "f1": 0.23738130934532736,
+        "positives": 987,
+        "negatives": 34101
+      },
+      "event_strict": {
+        "n_events": 4,
+        "n_detected": 4,
+        "n_alerts": 30,
+        "n_false_alarms": 26,
+        "event_recall": 1.0,
+        "alert_precision": 0.13333333333333333,
+        "event_f1": 0.23529411764705882,
+        "false_alarms_per_hour": 0.00731978547397957,
+        "mean_delay_s": 5625.0,
+        "detected_by_kind": {
+          "air_leak": {
+            "detected": 4,
+            "total": 4
+          }
+        }
+      },
+      "event_early_2h": {
+        "n_events": 4,
+        "n_detected": 4,
+        "n_alerts": 30,
+        "n_false_alarms": 26,
+        "event_recall": 1.0,
+        "alert_precision": 0.13333333333333333,
+        "event_f1": 0.23529411764705882,
+        "false_alarms_per_hour": 0.007336308614049031,
+        "mean_delay_s": 5625.0,
+        "detected_by_kind": {
+          "air_leak": {
+            "detected": 4,
+            "total": 4
+          }
+        }
+      },
+      "per_event": [
+        {
+          "start_h": 408.0,
+          "detected": true,
+          "delay_min": 75.0
+        },
+        {
+          "start_h": 1415.5,
+          "detected": true,
+          "delay_min": 40.0
+        },
+        {
+          "start_h": 1570.0,
+          "detected": true,
+          "delay_min": 45.0
+        },
+        {
+          "start_h": 2534.5,
+          "detected": true,
+          "delay_min": 215.0
+        }
+      ],
+      "false_alarms_per_day": 0.17567485137550967,
+      "inference_latency": {
+        "n": 35220,
+        "mean_us": 6.391850539466212,
+        "p50_us": 6.167,
+        "p95_us": 7.583,
+        "p99_us": 10.125,
+        "max_us": 1041.75
+      },
+      "pipeline_latency": {
+        "n": 35220,
+        "mean_us": 152.1529302668938,
+        "p50_us": 146.375,
+        "p95_us": 178.12704999999983,
+        "p99_us": 240.1170199999999,
+        "max_us": 34182.416
+      },
+      "throughput_sps": 138419.95981472335,
+      "windows": 35240,
+      "skipped_windows": 8867
+    },
+    "pca": {
+      "threshold": 4.326920599589391,
+      "raise_after": 11,
+      "window": {
+        "roc_auc": 0.9588142078806544,
+        "pr_auc": 0.25278001624446417,
+        "precision": 0.13955467309601474,
+        "recall": 0.9969604863221885,
+        "f1": 0.24483702413535705,
+        "positives": 987,
+        "negatives": 34101
+      },
+      "event_strict": {
+        "n_events": 4,
+        "n_detected": 4,
+        "n_alerts": 28,
+        "n_false_alarms": 24,
+        "event_recall": 1.0,
+        "alert_precision": 0.14285714285714285,
+        "event_f1": 0.25,
+        "false_alarms_per_hour": 0.006756725052904218,
+        "mean_delay_s": 3450.0,
+        "detected_by_kind": {
+          "air_leak": {
+            "detected": 4,
+            "total": 4
+          }
+        }
+      },
+      "event_early_2h": {
+        "n_events": 4,
+        "n_detected": 4,
+        "n_alerts": 28,
+        "n_false_alarms": 24,
+        "event_recall": 1.0,
+        "alert_precision": 0.14285714285714285,
+        "event_f1": 0.25,
+        "false_alarms_per_hour": 0.006771977182199105,
+        "mean_delay_s": 3450.0,
+        "detected_by_kind": {
+          "air_leak": {
+            "detected": 4,
+            "total": 4
+          }
+        }
+      },
+      "per_event": [
+        {
+          "start_h": 408.0,
+          "detected": true,
+          "delay_min": 80.0
+        },
+        {
+          "start_h": 1415.5,
+          "detected": true,
+          "delay_min": 45.0
+        },
+        {
+          "start_h": 1570.0,
+          "detected": true,
+          "delay_min": 50.0
+        },
+        {
+          "start_h": 2534.5,
+          "detected": true,
+          "delay_min": 55.0
+        }
+      ],
+      "false_alarms_per_day": 0.16216140126970124,
+      "inference_latency": {
+        "n": 35220,
+        "mean_us": 15.510368313458264,
+        "p50_us": 15.333,
+        "p95_us": 18.166,
+        "p99_us": 21.75,
+        "max_us": 135.875
+      },
+      "pipeline_latency": {
+        "n": 35220,
+        "mean_us": 157.66522101078934,
+        "p50_us": 155.792,
+        "p95_us": 183.583,
+        "p99_us": 240.1922299999998,
+        "max_us": 1430.458
+      },
+      "throughput_sps": 136497.02830336354,
+      "windows": 35240,
+      "skipped_windows": 8867
+    },
+    "iforest": {
+      "threshold": 0.7646162087932915,
+      "raise_after": 7,
+      "window": {
+        "roc_auc": 0.9872695648990972,
+        "pr_auc": 0.508375723488502,
+        "precision": 0.3604887983706721,
+        "recall": 0.17933130699088146,
+        "f1": 0.2395128552097429,
+        "positives": 987,
+        "negatives": 34101
+      },
+      "event_strict": {
+        "n_events": 4,
+        "n_detected": 1,
+        "n_alerts": 6,
+        "n_false_alarms": 2,
+        "event_recall": 0.25,
+        "alert_precision": 0.6666666666666666,
+        "event_f1": 0.36363636363636365,
+        "false_alarms_per_hour": 0.0005630604210753516,
+        "mean_delay_s": 5100.0,
+        "detected_by_kind": {
+          "air_leak": {
+            "detected": 1,
+            "total": 4
+          }
+        }
+      },
+      "event_early_2h": {
+        "n_events": 4,
+        "n_detected": 1,
+        "n_alerts": 6,
+        "n_false_alarms": 2,
+        "event_recall": 0.25,
+        "alert_precision": 0.6666666666666666,
+        "event_f1": 0.36363636363636365,
+        "false_alarms_per_hour": 0.0005643314318499255,
+        "mean_delay_s": 5100.0,
+        "detected_by_kind": {
+          "air_leak": {
+            "detected": 1,
+            "total": 4
+          }
+        }
+      },
+      "per_event": [
+        {
+          "start_h": 408.0,
+          "detected": false,
+          "delay_min": null
+        },
+        {
+          "start_h": 1415.5,
+          "detected": false,
+          "delay_min": null
+        },
+        {
+          "start_h": 1570.0,
+          "detected": true,
+          "delay_min": 85.0
+        },
+        {
+          "start_h": 2534.5,
+          "detected": false,
+          "delay_min": null
+        }
+      ],
+      "false_alarms_per_day": 0.013513450105808438,
+      "inference_latency": {
+        "n": 35220,
+        "mean_us": 4393.389240147644,
+        "p50_us": 4245.5835,
+        "p95_us": 5431.474699999998,
+        "p99_us": 6652.0913099999925,
+        "max_us": 105573.041
+      },
+      "pipeline_latency": {
+        "n": 35220,
+        "mean_us": 4590.447581061897,
+        "p50_us": 4443.75,
+        "p95_us": 5678.214249999999,
+        "p99_us": 7004.96048,
+        "max_us": 105921.833
+      },
+      "throughput_sps": 7927.841567144753,
+      "windows": 35240,
+      "skipped_windows": 8867
+    },
+    "autoencoder": {
+      "threshold": 4.791071270018062,
+      "raise_after": 7,
+      "window": {
+        "roc_auc": 0.9358822399174369,
+        "pr_auc": 0.1819345215597773,
+        "precision": 0.2578616352201258,
+        "recall": 0.9969604863221885,
+        "f1": 0.4097439100562149,
+        "positives": 987,
+        "negatives": 34101
+      },
+      "event_strict": {
+        "n_events": 4,
+        "n_detected": 4,
+        "n_alerts": 23,
+        "n_false_alarms": 19,
+        "event_recall": 1.0,
+        "alert_precision": 0.17391304347826086,
+        "event_f1": 0.29629629629629634,
+        "false_alarms_per_hour": 0.005349074000215839,
+        "mean_delay_s": 1650.0,
+        "detected_by_kind": {
+          "air_leak": {
+            "detected": 4,
+            "total": 4
+          }
+        }
+      },
+      "event_early_2h": {
+        "n_events": 4,
+        "n_detected": 4,
+        "n_alerts": 23,
+        "n_false_alarms": 19,
+        "event_recall": 1.0,
+        "alert_precision": 0.17391304347826086,
+        "event_f1": 0.29629629629629634,
+        "false_alarms_per_hour": 0.005361148602574291,
+        "mean_delay_s": 1650.0,
+        "detected_by_kind": {
+          "air_leak": {
+            "detected": 4,
+            "total": 4
+          }
+        }
+      },
+      "per_event": [
+        {
+          "start_h": 408.0,
+          "detected": true,
+          "delay_min": 0.0
+        },
+        {
+          "start_h": 1415.5,
+          "detected": true,
+          "delay_min": 30.0
+        },
+        {
+          "start_h": 1570.0,
+          "detected": true,
+          "delay_min": 35.0
+        },
+        {
+          "start_h": 2534.5,
+          "detected": true,
+          "delay_min": 45.0
+        }
+      ],
+      "false_alarms_per_day": 0.12837777600518013,
+      "inference_latency": {
+        "n": 35220,
+        "mean_us": 26.737653265190232,
+        "p50_us": 24.667,
+        "p95_us": 36.79104999999999,
+        "p99_us": 61.25228999999951,
+        "max_us": 3633.417
+      },
+      "pipeline_latency": {
+        "n": 35220,
+        "mean_us": 214.54508696763205,
+        "p50_us": 195.625,
+        "p95_us": 301.667,
+        "p99_us": 425.3592299999998,
+        "max_us": 75000.75
+      },
+      "throughput_sps": 102076.75635990239,
+      "windows": 35240,
+      "skipped_windows": 8867
+    },
+    "iforest-packed": {
+      "threshold": 0.7646162087932914,
+      "raise_after": 7,
+      "window": {
+        "roc_auc": 0.9872695648990972,
+        "pr_auc": 0.508375723488502,
+        "precision": 0.3604887983706721,
+        "recall": 0.17933130699088146,
+        "f1": 0.2395128552097429,
+        "positives": 987,
+        "negatives": 34101
+      },
+      "event_strict": {
+        "n_events": 4,
+        "n_detected": 1,
+        "n_alerts": 6,
+        "n_false_alarms": 2,
+        "event_recall": 0.25,
+        "alert_precision": 0.6666666666666666,
+        "event_f1": 0.36363636363636365,
+        "false_alarms_per_hour": 0.0005630604210753516,
+        "mean_delay_s": 5100.0,
+        "detected_by_kind": {
+          "air_leak": {
+            "detected": 1,
+            "total": 4
+          }
+        }
+      },
+      "event_early_2h": {
+        "n_events": 4,
+        "n_detected": 1,
+        "n_alerts": 6,
+        "n_false_alarms": 2,
+        "event_recall": 0.25,
+        "alert_precision": 0.6666666666666666,
+        "event_f1": 0.36363636363636365,
+        "false_alarms_per_hour": 0.0005643314318499255,
+        "mean_delay_s": 5100.0,
+        "detected_by_kind": {
+          "air_leak": {
+            "detected": 1,
+            "total": 4
+          }
+        }
+      },
+      "per_event": [
+        {
+          "start_h": 408.0,
+          "detected": false,
+          "delay_min": null
+        },
+        {
+          "start_h": 1415.5,
+          "detected": false,
+          "delay_min": null
+        },
+        {
+          "start_h": 1570.0,
+          "detected": true,
+          "delay_min": 85.0
+        },
+        {
+          "start_h": 2534.5,
+          "detected": false,
+          "delay_min": null
+        }
+      ],
+      "false_alarms_per_day": 0.013513450105808438,
+      "inference_latency": {
+        "n": 35220,
+        "mean_us": 127.70305139125496,
+        "p50_us": 118.292,
+        "p95_us": 144.166,
+        "p99_us": 189.0332099999999,
+        "max_us": 2814.792
+      },
+      "pipeline_latency": {
+        "n": 35220,
+        "mean_us": 284.747530096536,
+        "p50_us": 262.333,
+        "p95_us": 326.71519999999947,
+        "p99_us": 441.55924999999974,
+        "max_us": 7356.917
+      },
+      "throughput_sps": 90915.85741645019,
+      "windows": 35240,
+      "skipped_windows": 8867
+    }
+  },
+  "wall_clock_s": 235.2304892539978
+}
