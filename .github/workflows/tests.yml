@@ -1,0 +1,19 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - name: Install
+        run: uv sync --all-extras
+      - name: Tests
+        run: uv run pytest
+      - name: Streaming demo smoke run (8x real time, 60 s of stream)
+        run: uv run python scripts/stream_demo.py --speed 8 --seconds 60
