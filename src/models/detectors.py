@@ -5,7 +5,8 @@ practice) and expose the same contract:
 
     fit(X)      X: (n_windows, n_features) healthy data
     score(X)    anomaly score per row, higher = more abnormal
-    to_onnx()   the same scoring function as an ONNX graph (see src/inference)
+
+src/inference/onnx_export.py turns any of them into an equivalent ONNX graph.
 
 Inference is written the way it would be deployed: z-score, PCA and the
 autoencoder are a handful of matrix operations evaluated with NumPy on the
@@ -94,6 +95,9 @@ class PCADetector(Detector):
         _, s, vt = np.linalg.svd(Z - Z.mean(axis=0), full_matrices=False)
         eig = s**2 / (len(Z) - 1)
         k = int(np.searchsorted(np.cumsum(eig) / eig.sum(), self.variance) + 1)
+        # Keep at least one residual direction, otherwise SPE is rounding noise
+        # and dividing by its percentile explodes (seen in float32 ONNX).
+        k = min(k, Z.shape[1] - 1)
         self.components_ = vt[:k]  # (k, d)
         self.eigenvalues_ = eig[:k]
         spe, t2 = self._stats(Z)
