@@ -137,3 +137,57 @@ def event_metrics(
         mean_delay_s=float(np.mean(delays)) if delays else float("nan"),
         detected_by_kind={k: {"detected": v[0], "total": v[1]} for k, v in by_kind.items()},
     )
+
+
+def _spans(alerts, duration_s):
+    return [(a.start_t, a.end_t if a.end_t is not None else duration_s) for a in alerts]
+
+
+def alarm_time_fraction(events, alerts, duration_s: float, lead_s: float = 0.0,
+                        recovery_s: float = 0.0) -> float:
+    """Share of healthy time spent in ALARM. Counting false alarms hides a single
+    alarm that stays on for a week; this does not."""
+    step = 60.0
+    t = np.arange(0.0, duration_s, step)
+    busy = np.zeros(len(t), dtype=bool)
+    for ev in events:
+        rec = getattr(ev, "recovery_s", recovery_s)
+        busy |= (t >= ev.start_s - lead_s) & (t <= ev.end_s + rec)
+    on = np.zeros(len(t), dtype=bool)
+    for a, b in _spans(alerts, duration_s):
+        on |= (t >= a) & (t < b)
+    healthy = ~busy
+    return float(on[healthy].mean()) if healthy.any() else float("nan")
+
+
+def chance_detections(events, alerts, duration_s: float, grace_s: float = 0.0,
+                      lead_s: float = 0.0, n_shifts: int = 2000, seed: int = 0) -> dict:
+    """How many faults would the SAME alerts hit if they were unrelated to the faults?
+
+    Every alert is shifted by one random offset, circularly over the run, which
+    keeps their number, durations and spacing. With few events and long alarms,
+    "detected 4/4" can be luck; the p-value is the share of random shifts that
+    detect at least as many faults as the real alert timing.
+    """
+    spans = np.array(_spans(alerts, duration_s), dtype=float).reshape(-1, 2)
+    ev = np.array([(e.start_s - lead_s, e.end_s + grace_s) for e in events], dtype=float)
+
+    def detected(sp):
+        return int(sum(np.any((sp[:, 0] <= hi) & (sp[:, 1] >= lo)) for lo, hi in ev))
+
+    observed = detected(spans) if len(spans) else 0
+    if len(spans) == 0:
+        return {"observed": 0, "chance_mean": 0.0, "p_value": 1.0}
+    rng = np.random.default_rng(seed)
+    counts = np.empty(n_shifts)
+    lengths = spans[:, 1] - spans[:, 0]
+    for i in range(n_shifts):
+        start = (spans[:, 0] + rng.uniform(0, duration_s)) % duration_s
+        end = start + lengths
+        # An alert wrapping past the end continues at the start of the run.
+        wrap = end > duration_s
+        sp = np.vstack([np.column_stack([start, np.minimum(end, duration_s)]),
+                        np.column_stack([np.zeros(wrap.sum()), end[wrap] - duration_s])])
+        counts[i] = detected(sp)
+    return {"observed": observed, "chance_mean": float(counts.mean()),
+            "p_value": float(np.mean(counts >= observed))}

@@ -79,3 +79,24 @@ def test_aftermath_mask_only_marks_healthy_windows():
     t = np.array([15, 21, 25, 40])
     y = np.array([1, 1, 0, 0])
     assert aftermath_mask(t, y, ev, recovery_s=10).tolist() == [False, False, True, False]
+
+
+def test_alarm_time_fraction_ignores_fault_time():
+    from src.benchmarking.metrics import alarm_time_fraction
+
+    events = [SimpleNamespace(start_s=0, end_s=3600)]
+    alerts = [SimpleNamespace(start_t=0, end_t=3600),       # during the fault: not counted
+              SimpleNamespace(start_t=5400, end_t=7200)]    # half of the healthy hour
+    assert alarm_time_fraction(events, alerts, 7200) == pytest.approx(0.5, abs=0.02)
+
+
+def test_chance_detections_separates_timed_from_random_alerts():
+    from src.benchmarking.metrics import chance_detections
+
+    events = [SimpleNamespace(start_s=s, end_s=s + 60) for s in (1000, 5000, 9000, 13000)]
+    timed = [SimpleNamespace(start_t=e.start_s + 10, end_t=e.start_s + 40) for e in events]
+    res = chance_detections(events, timed, 20000, n_shifts=500)
+    assert res["observed"] == 4 and res["p_value"] < 0.01
+    always_on = [SimpleNamespace(start_t=0, end_t=20000)]
+    res = chance_detections(events, always_on, 20000, n_shifts=200)
+    assert res["observed"] == 4 and res["p_value"] == 1.0

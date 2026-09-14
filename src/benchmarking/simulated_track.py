@@ -9,7 +9,14 @@ from dataclasses import dataclass
 import numpy as np
 
 from src.alerts.engine import AlertEngine
-from src.benchmarking.metrics import aftermath_mask, event_metrics, window_labels, window_metrics
+from src.benchmarking.metrics import (
+    aftermath_mask,
+    alarm_time_fraction,
+    chance_detections,
+    event_metrics,
+    window_labels,
+    window_metrics,
+)
 from src.config import detector_kwargs
 from src.data.simulator import SimulatedRun, simulate, simulate_with_faults
 from src.features.simulated import SimulatedFeatureExtractor
@@ -102,5 +109,10 @@ def evaluate(cfg: dict, detector, calib: Calibration, run: SimulatedRun,
     wm = window_metrics(y[~ignore], scores[~ignore], calib.threshold)
     em = event_metrics(run.events, eng.alerts.history, run.duration_s, ev_cfg["grace_s"],
                        ev_cfg["recovery_s"])
-    return report, {"window": wm.__dict__, "event": em.to_dict(), "y": y, "ignore": ignore,
+    event = em.to_dict()
+    event["alarm_time_fraction"] = alarm_time_fraction(run.events, eng.alerts.history,
+                                                       run.duration_s, recovery_s=ev_cfg["recovery_s"])
+    event["chance"] = chance_detections(run.events, eng.alerts.history, run.duration_s,
+                                        ev_cfg["grace_s"], n_shifts=500, seed=run.seed)
+    return report, {"window": wm.__dict__, "event": event, "y": y, "ignore": ignore,
                     "scores": scores, "alerts": list(eng.alerts.history)}

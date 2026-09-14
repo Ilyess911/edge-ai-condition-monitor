@@ -66,6 +66,9 @@ def aggregate(per_seed: list[dict]) -> dict:
             "event_recall": n_detected / n_events,
             "alert_precision": (n_alerts - n_false) / n_alerts if n_alerts else 0.0,
             "mean_delay_s": float(sum(delays) / n_detected) if n_detected else float("nan"),
+            "chance_detected_mean": float(sum(r["event"]["chance"]["chance_mean"] for r in per_seed)),
+            "alarm_time_fraction_mean": float(np.mean([r["event"]["alarm_time_fraction"]
+                                                       for r in per_seed])),
             "detected_by_kind": by_kind,
         },
     }

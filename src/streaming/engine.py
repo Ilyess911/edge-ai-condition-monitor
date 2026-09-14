@@ -131,12 +131,14 @@ class StreamingEngine:
         chunk_size: int,
         paced: bool = False,
         on_window: Callable[[WindowRecord], None] | None = None,
+        speed: float = 1.0,
     ) -> StreamReport:
         """Replay `signals` through the pipeline.
 
         paced=False: as fast as possible, measures maximum throughput.
         paced=True:  each chunk is released when the sensor would have produced
                      it, measures CPU utilisation and lateness at the real rate.
+        speed:       paced replay clock multiplier (demo only; benchmarks use 1).
         """
         self.reset()
         records: list[WindowRecord] = []
@@ -148,7 +150,7 @@ class StreamingEngine:
         for start in range(0, n, chunk_size):
             stop = min(n, start + chunk_size)
             if paced:
-                due = wall0 + stop / self.fs  # the last sample of the chunk exists at this time
+                due = wall0 + stop / (self.fs * speed)  # last sample of the chunk exists now
                 now = time.perf_counter()
                 if due > now:
                     time.sleep(due - now)
