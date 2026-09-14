@@ -1,0 +1,57 @@
+# Simulated rotating-machine track. Values were tuned on dev_seed only, then frozen
+# before the first evaluation on test_seeds (JOURNAL.md, 2026-09-14).
+# Changing one after that is a new experiment in docs/experiments.md.
+
+[stream]
+fs = 1000          # Hz, ADC sampling rate after anti-aliasing
+window_s = 1.0     # feature window
+hop_s = 0.5        # one decision every 0.5 s
+chunk_s = 0.05     # DAQ driver hands over 50 ms buffers
+
+[data]
+train_duration_s = 3600   # 60 min healthy, fits the detectors
+train_seed = 1
+calib_duration_s = 1800   # 30 min healthy, held out, sets the threshold
+calib_seed = 2
+test_duration_s = 3600    # 60 min per test run, with faults
+dev_seed = 101            # used while building the simulator and pipeline, never reported
+test_seeds = [201, 202, 203, 204, 205]  # untouched until the benchmark run
+faults_per_run = 5         # each fault type exactly once per run
+min_gap_s = 240           # healthy time between faults (> recovery_s)
+
+[cleaning]
+# vibration [g], temperature [degC], current [A], speed [rpm], pressure [bar]
+low  = [-50.0, -40.0, 0.0,    0.0,  0.0]
+high = [ 50.0, 150.0, 60.0, 4000.0, 20.0]
+max_hold_s = 1.0
+
+[threshold]
+quantile = 0.995
+
+[alerts]
+# raise_after = "auto": smallest persistence with zero alerts on the healthy
+# calibration run (src/inference/threshold.py), capped at max_raise_after.
+raise_after = "auto"
+max_raise_after = 20   # 20 windows = 10 s worst-case added delay
+clear_after = 5
+
+[evaluation]
+grace_s = 5.0      # an alert starting up to 5 s after a fault ends still detects it
+recovery_s = 180.0 # after a fault ends, temperature relaxes with tau = 120 s; alerts and
+                   # windows in this aftermath are neither detections nor false alarms
+
+[models.zscore]
+detector = "zscore"
+
+[models.pca]
+detector = "pca"
+variance = 0.95
+
+[models.iforest]
+detector = "iforest"
+n_estimators = 100
+max_samples = 256
+
+[models.autoencoder]
+detector = "autoencoder"
+hidden = [8, 3, 8]
