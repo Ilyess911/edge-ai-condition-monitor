@@ -23,14 +23,7 @@ from src.features.simulated import SimulatedFeatureExtractor
 from src.inference.threshold import calibrate_persistence, calibrate_threshold
 from src.models.detectors import build
 from src.preprocessing.cleaning import SampleCleaner
-from src.streaming.engine import StreamingEngine, StreamReport
-
-
-class _NullDetector:
-    """Placeholder used while collecting features: scores are ignored."""
-
-    def score(self, X):
-        return np.zeros(len(X))
+from src.streaming.engine import NullDetector, StreamingEngine, StreamReport
 
 
 def geometry(cfg: dict, fs: float | None = None) -> tuple[float, int, int, int]:
@@ -72,7 +65,7 @@ def test_run(cfg: dict, seed: int, fs: float | None = None) -> SimulatedRun:
 
 
 def stream_features(cfg: dict, run: SimulatedRun) -> np.ndarray:
-    eng = make_engine(cfg, _NullDetector(), None, fs=run.fs, keep_features=True)
+    eng = make_engine(cfg, NullDetector(), None, fs=run.fs, keep_features=True)
     _, _, _, chunk = geometry(cfg, run.fs)
     eng.run(run.signals, chunk)
     return np.array(eng.features)

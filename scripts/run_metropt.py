@@ -33,12 +33,7 @@ from src.inference.packed_forest import PackedIsolationForestDetector  # noqa: E
 from src.inference.threshold import calibrate_persistence, calibrate_threshold  # noqa: E402
 from src.models.detectors import build  # noqa: E402
 from src.preprocessing.cleaning import SampleCleaner  # noqa: E402
-from src.streaming.engine import StreamingEngine  # noqa: E402
-
-
-class _Null:
-    def score(self, X):
-        return np.zeros(len(X))
+from src.streaming.engine import NullDetector, StreamingEngine  # noqa: E402
 
 
 def engine(cfg, detector, alerts=None, keep=False, mask=None):
@@ -77,7 +72,7 @@ def main() -> None:
 
     feats = {}
     for name, sig in (("train", train), ("calib", calib)):
-        eng = engine(cfg, _Null(), keep=True)  # features masked below, after collection
+        eng = engine(cfg, NullDetector(), keep=True)  # features masked below, after collection
         eng.run(sig, chunk)
         feats[name] = np.array(eng.features)[:, keep]
         print(f"{name}: {len(sig)} grid samples, {len(feats[name])} windows, "

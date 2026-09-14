@@ -18,7 +18,6 @@ import pickle
 import platform
 import subprocess
 import sys
-import time
 import tracemalloc
 
 import numpy as np
@@ -62,18 +61,6 @@ def model_load_rss(detector) -> dict:
     after = proc.memory_info().rss
     del loaded
     return {"serialized_kib": len(blob) / 1024, "load_rss_delta_kib": (after - before) / 1024}
-
-
-def microbench(fn, n: int = 2000, warmup: int = 50) -> np.ndarray:
-    for _ in range(warmup):
-        fn()
-    out = np.empty(n, dtype=np.int64)
-    clock = time.perf_counter_ns
-    for i in range(n):
-        a = clock()
-        fn()
-        out[i] = clock() - a
-    return out
 
 
 def environment() -> dict:

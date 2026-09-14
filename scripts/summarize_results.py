@@ -53,7 +53,7 @@ def simulated(b):
           f"at end {env['load_average_1_5_15']} (other workloads were running).\n")
 
     print("| Model | Runtime | Faults detected | Event F1 | False alarms / h | Mean delay | "
-          "Window PR-AUC | Inference p50 / p99 | Throughput | Size | Edge suitability |")
+          "Window PR-AUC | Inference p50 / p99 | Throughput | Size | Deployment class (rule, untested) |")
     print("|---|---|---|---|---|---|---|---|---|---|---|")
     order = ["zscore", "pca", "autoencoder", "iforest", "iforest-packed",
              "zscore-onnx", "pca-onnx", "autoencoder-onnx", "iforest-onnx"]
@@ -69,6 +69,11 @@ def simulated(b):
               f"{c['throughput_sps_mean'] / 1e3:.0f} k samples/s | {c['serialized_kib']:.1f} KiB | "
               f"{suitability(r, hop_ms)} |")
 
+    print("\nDeployment class is a stated rule, not a hardware result: matrix-operation or "
+          f"table models under {MCU_FLASH_KIB} KiB serialized are marked MCU-portable, larger "
+          "ones SBC / gateway, scikit-learn Isolation Forest gateway only. The budget column "
+          "compares laptop p99 window pipeline latency (features + inference + alert) with "
+          "the 500 ms hop.")
     print("\n#### Chance level and alarm time\n")
     print("| Model | Detected | Same alerts at random offsets | Healthy time in alarm | "
           "Persistence (windows) |")

@@ -79,7 +79,7 @@ def align_to_grid(ts: pd.Series, values: np.ndarray, period_s: float) -> tuple[p
     """Place irregular samples on a fixed grid, nearest-earlier slot, NaN if none.
 
     A gateway does the same when it hands a fixed-rate stream to a model: the
-    logger jitters between 8 and 13 s, the model expects a sample every 10 s.
+    logger interval is mostly 9 to 13 s, the model expects a sample every 10 s.
     """
     t0 = ts.iloc[0].floor(f"{int(period_s)}s")
     slot = ((ts - t0).dt.total_seconds() // period_s).to_numpy().astype(np.int64)

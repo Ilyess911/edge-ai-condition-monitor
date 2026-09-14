@@ -23,16 +23,12 @@ FEATURE_NAMES = (
 
 
 class MetroPTFeatureExtractor:
-    names = FEATURE_NAMES
-
     def __init__(self, min_coverage: float = 0.8):
         self.min_coverage = min_coverage
-        self.skipped = 0
 
     def __call__(self, w: np.ndarray) -> np.ndarray | None:
         # Too many missing samples (logger gap longer than the hold time): no decision.
         if np.mean(~np.isnan(w[:, C["TP3"]])) < self.min_coverage:
-            self.skipped += 1
             return None
         col = lambda name: w[:, C[name]]  # noqa: E731
         load = col("DV_eletric")

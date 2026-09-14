@@ -1,7 +1,7 @@
 [project]
 name = "edge-ai-condition-monitor"
 version = "0.1.0"
-description = "Real-time Edge AI prototype for equipment condition monitoring, combining streaming sensor data, lightweight anomaly detection and deployment-oriented benchmarking."
+description = "Streaming Edge AI prototype for equipment condition monitoring, combining streaming sensor data, lightweight anomaly detection and deployment-oriented benchmarking."
 readme = "README.md"
 license = { text = "MIT" }
 authors = [{ name = "Ilyess Assadi" }]

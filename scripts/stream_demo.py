@@ -1,4 +1,4 @@
-"""Real-time streaming demo in the terminal.
+"""Online inference demo in the terminal (paced replay of a simulated stream).
 
     uv run python scripts/stream_demo.py                      # PCA, 1 kHz, real time
     uv run python scripts/stream_demo.py --model iforest --speed 4

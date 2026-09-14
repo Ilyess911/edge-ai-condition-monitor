@@ -29,8 +29,6 @@ BANDS_HZ = ((0.0, 60.0), (60.0, 200.0), (200.0, 500.0))
 
 
 class SimulatedFeatureExtractor:
-    names = FEATURE_NAMES
-
     def __init__(self, fs: float, window: int):
         self.fs = fs
         self.window = window

@@ -122,8 +122,9 @@ def fig_sensor_stream(cfg, seed):
                      label_y=1.02, scale=60)
         ax.plot(t, y, color=INK, lw=0.8)
         ax.set_ylabel(name, rotation=0, ha="right", va="center")
-    axes[0].set_title(f"SIMULATED sensor stream, test run seed {seed} (1 s means of 1 kHz samples; "
-                      "grey = injected fault)", loc="left", pad=16)
+    axes[0].set_title(f"SIMULATED sensor stream, test run seed {seed}: 1 s means of raw 1 kHz samples "
+                      "before edge cleaning (spikes = injected glitches); grey = injected fault",
+                      loc="left", pad=16)
     axes[-1].set_xlabel("time [min]")
     save(fig, "sensor_stream.png")
 
@@ -176,10 +177,10 @@ def fig_score_timeline(seed):
 def fig_model_comparison(bench):
     res = bench["results"]
     names = ["zscore", "pca", "iforest", "autoencoder"]
-    metrics = [("event recall", lambda r: r["pooled"]["event_recall"]),
-               ("alert precision", lambda r: r["pooled"]["alert_precision"]),
-               ("window PR-AUC", lambda r: r["window"]["pr_auc"]["mean"]),
-               ("window ROC-AUC", lambda r: r["window"]["roc_auc"]["mean"])]
+    metrics = [("event\nrecall", lambda r: r["pooled"]["event_recall"]),
+               ("alert\nprecision", lambda r: r["pooled"]["alert_precision"]),
+               ("window\nPR-AUC", lambda r: r["window"]["pr_auc"]["mean"]),
+               ("window\nROC-AUC", lambda r: r["window"]["roc_auc"]["mean"])]
     fig, (ax, ax2) = plt.subplots(1, 2, figsize=(11, 3.6), gridspec_kw={"width_ratios": [1.3, 1]})
     width = 0.19
     x = np.arange(len(metrics))

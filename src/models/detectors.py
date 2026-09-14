@@ -126,7 +126,7 @@ class IsolationForestDetector(Detector):
 
     No distance, no density, no scaling needed, and the cost per window is
     n_estimators tree walks of depth <= log2(max_samples): bounded and known
-    in advance, which is what a real-time budget needs.
+    in advance, which is what a latency budget needs.
     """
 
     name = "iforest"

@@ -15,7 +15,7 @@ def test_streaming_features_equal_offline_features(cfg):
 
 def test_engine_report_counts_and_timings(cfg):
     run = simulate(20, 1000, seed=6)
-    det = st._NullDetector()
+    det = st.NullDetector()
     calib = st.Calibration(threshold=1.0, raise_after=3)
     eng = st.make_engine(cfg, det, calib)
     report = eng.run(run.signals, chunk_size=50)
@@ -28,7 +28,7 @@ def test_engine_report_counts_and_timings(cfg):
 
 def test_paced_replay_keeps_up_with_sensor_clock(cfg):
     run = simulate(2, 1000, seed=7)
-    eng = st.make_engine(cfg, st._NullDetector(), None)
+    eng = st.make_engine(cfg, st.NullDetector(), None)
     report = eng.run(run.signals, chunk_size=50, paced=True)
     assert report.wall_s >= 1.9  # really waited for the samples
     assert report.cpu_utilisation < 1.0

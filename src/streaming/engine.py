@@ -1,4 +1,4 @@
-"""Real-time streaming engine.
+"""Streaming engine: online, window-by-window inference over a replayed sensor stream.
 
     chunk of raw samples
       -> SampleCleaner        (plausibility check, sample-and-hold)
@@ -10,7 +10,11 @@
 Samples arrive in chunks, as they do from a DAQ driver that hands over its DMA
 buffer: chunk_size = 1 is the sample-by-sample limit. Every stage is timed
 with perf_counter_ns around the call, on the same thread, one window at a time
-(no batching across windows: a real-time monitor cannot wait for future data).
+(no batching across windows: an online monitor cannot wait for future data).
+
+This is soft real-time at best: CPython, a garbage collector and a general-purpose
+OS scheduler give no latency guarantee. The engine measures lateness behind the
+sensor clock (paced mode) instead of assuming it is zero.
 """
 
 from __future__ import annotations
@@ -24,6 +28,13 @@ import numpy as np
 from src.alerts.engine import AlertEngine, Health
 from src.preprocessing.cleaning import SampleCleaner
 from src.preprocessing.windowing import SlidingWindow
+
+
+class NullDetector:
+    """Stands in for a model while collecting training features: scores are ignored."""
+
+    def score(self, X: np.ndarray) -> np.ndarray:
+        return np.zeros(len(X))
 
 
 @dataclass
@@ -55,11 +66,6 @@ class StreamReport:
     @property
     def throughput_sps(self) -> float:
         return self.samples / self.wall_s if self.wall_s > 0 else float("nan")
-
-    @property
-    def realtime_factor(self) -> float:
-        """How many times faster than the sensor the pipeline can go (unpaced runs)."""
-        return self.throughput_sps / self.fs
 
     @property
     def cpu_utilisation(self) -> float:

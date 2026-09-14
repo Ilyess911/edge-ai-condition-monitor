@@ -2,7 +2,7 @@
 
 THIS DATA IS SYNTHETIC. It exists so the streaming engine can be exercised at
 kHz sampling rates with exact ground-truth labels, which no public dataset with
-real-time replay offers at the same time. Every physical constant below is a
+paced replay offers at the same time. Every physical constant below is a
 modelling choice, documented in docs/data.md, not a measurement.
 
 Channels (one row per sample):

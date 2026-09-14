@@ -1,3 +1,5 @@
+import gc
+
 import numpy as np
 import pytest
 
@@ -22,6 +24,10 @@ def test_onnx_scores_match_native(rng, name, kwargs):
     np.testing.assert_allclose(ort, native, rtol=1e-4, atol=1e-4)
     single = onx.score(test[:1])
     assert single.shape == (1,)
+    # Release the ONNX Runtime session now: sessions still alive at interpreter
+    # exit can abort the process on macOS after the tests have passed.
+    del onx
+    gc.collect()
 
 
 def test_packed_forest_matches_sklearn(rng):
