@@ -3,15 +3,20 @@
 ## Starting point (what exists)
 
 A streaming pipeline with measured latency, four one-class detectors with
-label-free calibration, a simulated track with exact labels and a real track
-(MetroPT-3) with four failure reports. Its two most interesting open problems
-came out of the experiments, not out of a wish list:
+label-free calibration, real bearing vibration at 64 kHz (Paderborn, split by
+bearing), real compressor data with four failure reports (MetroPT-3) and a
+simulator with exact labels. Its three most interesting open problems came out of
+the experiments, not out of a wish list:
 
-1. **Calibration, not ranking, is the bottleneck.** On MetroPT-3 the detectors
+1. **A new machine looks like a fault.** On real Paderborn bearings held out by
+   mounting, detectors that flag 78 % of damaged recordings also flag 28-35 % of
+   healthy ones; one healthy bearing alone is flagged on 91 % of its recordings
+   with generic features and 0 % with envelope features.
+2. **Calibration, not ranking, is the bottleneck.** On MetroPT-3 the detectors
    rank failure windows well (ROC-AUC 0.94 to 0.99) yet disagree completely on
    what to alert on, because the threshold and persistence are set on a short
    calibration period.
-2. **Drift is indistinguishable from an unreported fault.** In August 2020 the
+3. **Drift is indistinguishable from an unreported fault.** In August 2020 the
    MetroPT-3 scores shift for weeks, driven by the `Oil_level` channel and a
    seasonal oil-temperature rise, with no failure report to explain it.
 

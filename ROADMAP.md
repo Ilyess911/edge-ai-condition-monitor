@@ -19,6 +19,8 @@ claimed before it exists.
 - [x] Isolation Forest, with a tree-count sweep
 - [x] Small autoencoder, justified as the non-linear counterpart of PCA
 - [x] Real-data track: MetroPT-3 with checksum-verified download and failure reports
+- [x] Real vibration track: Paderborn bearings (6 healthy, 14 real damage), 64 kHz, split by bearing
+- [x] Envelope-analysis features at bearing defect frequencies
 
 ## Phase 3 — Real-Time Inference (online inference simulation, soft real-time)
 
@@ -28,6 +30,7 @@ claimed before it exists.
 - [x] ONNX export of all four detectors, parity-tested
 - [x] Packed-array Isolation Forest runtime, exact parity with scikit-learn
 - [ ] Online (incremental) model update with drift detection
+- [ ] Per-machine calibration for bearing-to-bearing variation
 
 ## Phase 4 — Edge Benchmarking
 
@@ -36,7 +39,9 @@ claimed before it exists.
 - [x] Serialized size, parameter count, scoring heap peak, load RSS delta
 - [x] Window- and event-level detection metrics over 5 unseen test runs
 - [x] Chance-level control for event detection (circular shift)
-- [x] Sampling-rate sweep 250-2000 Hz
+- [x] Sampling-rate sweep 250-2000 Hz (simulated) and 2-64 kHz (real bearings)
+- [x] Feature-group ablation on real bearings
+- [x] Full pipeline timing and paced CPU at 64 kHz
 - [x] Fixed-persistence ablation
 - [x] Paced vs hot-loop latency check (EXP-010)
 - [ ] Measurements on a quiet machine (other workloads were running; load recorded)

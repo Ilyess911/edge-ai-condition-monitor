@@ -165,3 +165,75 @@ EXP-010 (paced vs unpaced, 3 repeats, 3 models).
 
 Unchanged from session 1, with one addition: run EXP-010 on a quiet machine and on
 the target device before quoting any absolute latency.
+
+## 2026-09-15 — Session 3: real bearing vibration (Paderborn)
+
+### Objective
+
+Replace the simulator as the main evidence with real kHz vibration data.
+
+### Work completed
+
+- Rejected two candidate datasets after inspecting them: a 500-row CSV whose
+  columns are statistically independent (position autocorrelation near 0,
+  uniform distributions, target column identical to an input column), and an
+  IEEE DataPort set described as simulated, sampled every 10 minutes, a few KB.
+- Adopted the Paderborn University (KAt) bearing data: read the measuring log and
+  damage profiles in the archives, downloaded 6 healthy and 14 real-damage
+  bearings (Zenodo mirror, MD5-verified; six archives confirmed byte-identical
+  to the university server), SHA-256 recorded.
+- Loader reading `.mat` files straight from the RAR archives, envelope-analysis
+  features, damage-profile parser, bearing-held-out folds, sampling-rate sweep,
+  feature-group ablation, full-engine timing at 64 kHz, figures, docs.
+
+### Technical decisions
+
+- **Split by bearing.** Recordings of one bearing share its mounting; a random
+  split by recording would let the model recognise the bearing.
+- **Recording-level decision** (flagged if any alert in 4 s), because bearings
+  are healthy or damaged for the whole recording: no onset to time.
+- **Real-damage bearings only**; artificial damage left out.
+- **Features before results:** the 15 features were fixed from bearing physics and
+  a check on two bearings before any detector was evaluated.
+
+### Experiments
+
+EXP-011 to EXP-014 in `docs/experiments.md`.
+
+### Results
+
+- 64 kHz, PCA: 78 % of damaged recordings flagged, 28 % of healthy ones.
+- Envelope + context features only: PCA false alarms 11 %, Isolation Forest
+  detection 35 → 56 %.
+- Feature extraction 1213 µs per window at 64 kHz vs 7.5 µs PCA inference;
+  176x faster than real time on a laptop core.
+
+### Problems encountered
+
+1. Kurtosis, the textbook impulsiveness indicator, is higher on several healthy
+   bearings (up to 14.8) than on the damaged KA04 (5.6): mounting effects.
+2. The university server throttled to about 70 kB/s per connection after the
+   first files; the Python downloader stalled at 100 kB/s. Switched to curl and
+   the Zenodo mirror with checksum verification.
+3. Two archives arrived corrupted or truncated (KI04 after a resumed transfer,
+   KI14 cut at 98 MB); the MD5 check stopped the pipeline both times, and both were
+   downloaded again.
+4. The damage-profile parser missed the extent of three multi-damage bearings
+   ("1 n/a"); fixed, parser moved to a tested pure function, metadata re-parsed.
+5. The laptop went to sleep with the lid closed during feature extraction.
+   Latencies are unaffected; the reported total run time (3.5 h) is not
+   meaningful.
+
+### Lessons learned
+
+- On real machines, the healthy population is the difficult class.
+- A feature tied to physics (defect frequency from geometry and speed) is worth
+  more for false alarms than any change of model.
+- At high sampling rates the edge budget is spent on signal processing, not on
+  the model.
+
+### Next steps
+
+1. Explain healthy K005 (flagged on 65 % of recordings by envelope features).
+2. Per-bearing calibration on a short healthy segment of each new machine.
+3. Profile and port the feature stage (FFT, envelope) to C before any device run.

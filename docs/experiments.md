@@ -240,3 +240,103 @@ each call is 1.5 to 2.6x slower than in a hot loop, probably because of
 frequency scaling and core migration (not verified). **The hot-loop numbers of
 EXP-002 are optimistic for a real monitor that mostly waits.** A device
 benchmark must be paced.
+
+---
+
+## Paderborn track environment (EXP-011 to EXP-014)
+
+Same laptop, software and single-thread settings as above, run on 2026-09-15.
+1-minute load average 0.96 at start and 1.97 at end. **The laptop went into
+clamshell sleep during feature extraction** (macOS power log, 16:26). Latencies
+use `perf_counter`, which does not advance during sleep on macOS, and the
+full-engine timing ran after wake; only the total wall-clock time of the run
+(12,481 s) is inflated.
+
+## EXP-011: detector comparison on real bearings (64 kHz)
+
+- **Dataset:** Paderborn, 6 healthy + 14 real-damage bearings, 80 recordings each.
+- **Protocol:** 3 folds, healthy bearings held out by fold (`configs/paderborn.toml`);
+  window 0.5 s, hop 0.25 s; threshold = 99.5th percentile on the calibration
+  bearing; persistence = longest calibration excursion + 1 (cap 8 windows).
+- **Decision:** a recording is flagged if at least one alert is raised in it.
+- **Isolation Forest scored with the packed runtime** (identical scores).
+
+| Model | Damaged recordings flagged | Healthy recordings flagged | Window ROC-AUC | Damaged bearings flagged on most recordings (A/B/C of 14) |
+|---|---|---|---|---|
+| Z-score | 72 ± 5 % | 18 ± 5 % | 0.860 ± 0.024 | 9 / 9 / 13 |
+| PCA | 78 ± 15 % | 28 ± 14 % | 0.868 ± 0.062 | 11 / 9 / 14 |
+| Autoencoder | 78 ± 17 % | 35 ± 15 % | 0.860 ± 0.079 | 11 / 8 / 14 |
+| Isolation Forest | 35 ± 29 % | 7 ± 6 % | 0.795 ± 0.133 | 0 / 2 / 11 |
+
+(± = standard deviation over the 3 folds.)
+
+**Interpretation.** Real bearings are much harder than the simulator: every
+detector that finds most damaged recordings also flags 18 to 35 % of healthy
+ones. Fold-to-fold variation is large because it depends on which healthy
+bearings are held out: with all features, PCA flags healthy K002 on 91 % of its
+recordings and healthy K001 on none. Isolation Forest is again the most
+conservative. Six healthy bearings are too few to estimate the false-alarm rate
+precisely.
+
+## EXP-012: sampling-rate sweep on real bearings
+
+- **Configuration:** as EXP-011, recordings decimated from 64 kHz with a
+  polyphase anti-aliasing filter; features and models refitted per rate.
+
+| Rate | Feature p50 / p99 | Z-score detected / false | PCA | Autoencoder | Isolation Forest |
+|---|---|---|---|---|---|
+| 64 kHz | 1213 / 3933 µs | 72 / 18 % | 78 / 28 % | 78 / 35 % | 35 / 7 % |
+| 32 kHz | 1101 / 2707 µs | 61 / 9 % | 71 / 21 % | 75 / 32 % | 38 / 5 % |
+| 16 kHz | 498 / 1333 µs | 53 / 8 % | 65 / 12 % | 66 / 20 % | 39 / 4 % |
+| 8 kHz | 191 / 337 µs | 42 / 4 % | 51 / 7 % | 58 / 6 % | 36 / 2 % |
+| 4 kHz | 120 / 186 µs | 42 / 3 % | 44 / 5 % | 56 / 22 % | 34 / 0 % |
+| 2 kHz | 87 / 143 µs | 51 / 2 % | 52 / 9 % | 59 / 17 % | 7 / 0 % |
+
+**Interpretation.** Lowering the rate lowers **both** detections and false
+alarms: part of what the high band carries is damage, part is the healthy
+bearing-to-bearing variation of EXP-011. Measured as detection minus false-alarm
+rate, PCA is best at 16 kHz (0.53) rather than 64 kHz (0.50), at 41 % of the
+64 kHz feature cost. Feature cost, not model inference, is what the sampling
+rate buys: 1213 µs per window at 64 kHz against 3 to 66 µs of inference.
+
+## EXP-013: feature-group ablation (64 kHz, PCA and Isolation Forest)
+
+| Features | PCA detected | PCA false | PCA ROC-AUC | IForest detected | IForest false | IForest ROC-AUC |
+|---|---|---|---|---|---|---|
+| all 15 | 78 % | 28 % | 0.868 | 35 % | 7 % | 0.795 |
+| without envelope (13) | 70 % | 24 % | 0.842 | 34 % | 10 % | 0.792 |
+| envelope + context only (5) | 60 % | 11 % | 0.842 | 56 % | 9 % | 0.848 |
+
+Per bearing, PCA with envelope + context: 0 % of recordings flagged on healthy
+K001, K002, K003, K004 and K006, but 65 % on healthy K005; 100 % on KA04, KA16,
+KB23; 9 % on KA22 and 23 % on KA15.
+
+**Interpretation.** Envelope energy at the defect frequencies, which is locked to
+shaft speed and bearing geometry, cuts PCA's false alarms from 28 to 11 % for
+18 points of detection and **raises** Isolation Forest's detection from 35 to
+56 %. Broadband statistics carry most of the healthy-bearing false alarms. The
+exception, healthy K005 flagged by envelope features, is left unexplained here.
+The envelope spectrum of healthy K002 also shows strong lines at about 52, 104,
+145, 210 and 263 Hz that are not bearing defect frequencies
+(`assets/paderborn_envelope.png`), so periodic content from the rig reaches the
+demodulation band.
+
+## EXP-014: full streaming pipeline at 64 kHz
+
+- **Configuration:** full engine (cleaning, windowing, features, model, alerts),
+  40 recordings (K001 and KA04, condition N15_M07_F10), unpaced; then paced
+  replay at the 64 kHz sensor clock for 60 s per variant.
+
+| Variant | Inference p50 / p99 | Pipeline p50 / p99 | Real-time factor | Paced CPU (% of one core) | Max lateness | Size |
+|---|---|---|---|---|---|---|
+| Z-score | 3.2 / 5.6 µs | 1213 / 1297 µs | 176x | 4.2 % | 48.8 ms | 0.5 KiB |
+| PCA | 7.5 / 15.1 µs | 1201 / 1980 µs | 176x | 3.9 % | 14.3 ms | 1.4 KiB |
+| Autoencoder | 9.8 / 13.3 µs | 1179 / 1232 µs | 181x | 3.9 % | 68.7 ms | 3.3 KiB |
+| Isolation Forest, packed | 54.0 / 107.3 µs | 1221 / 2040 µs | 174x | 4.0 % | 14.7 ms | 688 KiB |
+| Isolation Forest, scikit-learn | 1706 / 1891 µs | 2880 / 3092 µs | 83x | 6.9 % | 23.2 ms | 1511 KiB |
+
+**Interpretation.** At 64 kHz the window pipeline costs about 1.2 ms, of which
+the model is under 1 % for the linear models: the five Fourier transforms of the feature stage (spectrum, envelope, envelope spectrum, current)
+dominate. A laptop core keeps up 170 to 180 times faster than real time; that
+margin, not a device measurement, is what makes a Raspberry-class target
+plausible. Lateness up to 69 ms shows the jitter of a desktop OS.

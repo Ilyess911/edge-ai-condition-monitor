@@ -52,19 +52,26 @@
 
 ### Sampling
 
-- Simulated vibration: 1 kHz here, with a simulated resonance at 350 Hz. Real
-  bearing resonances are in the kHz range, so a real accelerometer channel would
-  need 10-25 kHz, 10 to 25 times more samples per window.
-- Measured on the laptop, feature extraction grew from 40 µs to 93 µs per window
-  when the rate went from 250 to 2000 Hz (8x the samples). The scaling is not
-  linear because Python overhead dominates small windows. The factor at 25 kHz on
-  ARM is unknown until measured.
+- Real bearing vibration (Paderborn) is recorded at 64 kHz. Measured on the laptop
+  core, feature extraction for a 0.5 s window costs 1213 µs p50 at 64 kHz, 498 µs at
+  16 kHz and 191 µs at 8 kHz, while model inference stays at 3-54 µs (packed
+  forest). On a Raspberry-class CPU the feature stage is therefore the first thing
+  to measure, and the first thing to port to C (CMSIS-DSP or a fixed-point FFT).
+- The sampling rate is a detection decision as much as a cost one: lowering it from
+  64 to 8 kHz cut PCA's false alarms from 28 % to 7 % but also its detections from
+  78 % to 51 % of damaged recordings (EXP-012).
+- Measured full pipeline at 64 kHz on the laptop: 170 to 180 times faster than real
+  time for all models except scikit-learn Isolation Forest (83x), about 4 % of one
+  core at the sensor rate. That margin, not a device measurement, is why a Pi-class
+  device is plausible.
 - Slow channels (temperature, pressure) need 1-10 Hz and could be decimated
   before the ring buffer.
 
 ### Memory
 
-- Per-stream state: one window, 1000 x 5 float64 = 40 KiB at 1 kHz.
+- Per-stream state: one window. On Paderborn at 64 kHz that is 32,000 x 5 float64 =
+  1.2 MiB, dominated by two high-rate channels; float32 halves it. At 1 kHz on the
+  simulator it is 40 KiB.
 - Models: from 24 numbers (z-score) to about 590 KiB (100-tree packed forest).
 - Unmeasured and probably dominant on a Pi: the Python interpreter, NumPy and
   ONNX Runtime themselves (tens of MB).
@@ -115,9 +122,9 @@ and time synchronisation.
 
 - **Edge:** acquisition, features, scoring, alerting. Alerts must not depend
   on the network.
-- **To the cloud:** alerts, feature summaries (12 float64 every 0.5 s is
-  192 B/s before compression, vs 40 kB/s for the 5 raw channels at 1 kHz), and
-  short raw snippets around alerts.
+- **To the cloud:** alerts, feature summaries (15 float64 every 0.25 s is 480 B/s,
+  vs 1 MB/s for vibration and current at 64 kHz as float64), and short raw
+  snippets around alerts.
 - **From the cloud:** retrained and recalibrated models, versioned, with
   rollback. This is where drift, observed on MetroPT-3 in August, would be
   handled.
