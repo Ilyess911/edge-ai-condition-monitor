@@ -1,0 +1,261 @@
+rate 64000 Hz
+  features K001 @ 64 kHz: 1200 windows
+  features K002 @ 64 kHz: 1201 windows
+  features K003 @ 64 kHz: 1200 windows
+  features K004 @ 64 kHz: 1200 windows
+  features K005 @ 64 kHz: 1200 windows
+  features K006 @ 64 kHz: 1200 windows
+  features KA04 @ 64 kHz: 1199 windows
+  features KA15 @ 64 kHz: 1198 windows
+  features KA16 @ 64 kHz: 1199 windows
+  features KA22 @ 64 kHz: 1198 windows
+  features KA30 @ 64 kHz: 1200 windows
+  features KB23 @ 64 kHz: 1197 windows
+  features KB24 @ 64 kHz: 1200 windows
+  features KB27 @ 64 kHz: 1201 windows
+  features KI04 @ 64 kHz: 1200 windows
+  features KI14 @ 64 kHz: 1202 windows
+  features KI16 @ 64 kHz: 1207 windows
+  features KI17 @ 64 kHz: 1203 windows
+  features KI18 @ 64 kHz: 1198 windows
+  features KI21 @ 64 kHz: 1199 windows
+  fold A zscore       k=3 rec-detect 0.699 rec-false 0.144 ROC-AUC 0.851
+  fold A pca          k=3 rec-detect 0.785 rec-false 0.456 ROC-AUC 0.814
+  fold A iforest      k=3 rec-detect 0.106 rec-false 0.056 ROC-AUC 0.607
+  fold A autoencoder  k=3 rec-detect 0.760 rec-false 0.500 ROC-AUC 0.770
+  fold B zscore       k=2 rec-detect 0.678 rec-false 0.250 ROC-AUC 0.835
+  fold B pca          k=2 rec-detect 0.597 rec-false 0.119 ROC-AUC 0.836
+  fold B iforest      k=3 rec-detect 0.176 rec-false 0.000 ROC-AUC 0.890
+  fold B autoencoder  k=3 rec-detect 0.594 rec-false 0.150 ROC-AUC 0.848
+  fold C zscore       k=3 rec-detect 0.795 rec-false 0.156 ROC-AUC 0.893
+  fold C pca          k=2 rec-detect 0.960 rec-false 0.269 ROC-AUC 0.955
+  fold C iforest      k=3 rec-detect 0.760 rec-false 0.150 ROC-AUC 0.888
+  fold C autoencoder  k=2 rec-detect 0.999 rec-false 0.394 ROC-AUC 0.962
+rate 32000 Hz
+  features K001 @ 32 kHz: 1200 windows
+  features K002 @ 32 kHz: 1202 windows
+  features K003 @ 32 kHz: 1200 windows
+  features K004 @ 32 kHz: 1200 windows
+  features K005 @ 32 kHz: 1200 windows
+  features K006 @ 32 kHz: 1200 windows
+  features KA04 @ 32 kHz: 1200 windows
+  features KA15 @ 32 kHz: 1199 windows
+  features KA16 @ 32 kHz: 1200 windows
+  features KA22 @ 32 kHz: 1200 windows
+  features KA30 @ 32 kHz: 1201 windows
+  features KB23 @ 32 kHz: 1200 windows
+  features KB24 @ 32 kHz: 1200 windows
+  features KB27 @ 32 kHz: 1202 windows
+  features KI04 @ 32 kHz: 1200 windows
+  features KI14 @ 32 kHz: 1202 windows
+  features KI16 @ 32 kHz: 1208 windows
+  features KI17 @ 32 kHz: 1203 windows
+  features KI18 @ 32 kHz: 1200 windows
+  features KI21 @ 32 kHz: 1199 windows
+  fold A zscore       k=3 rec-detect 0.617 rec-false 0.125 ROC-AUC 0.738
+  fold A pca          k=3 rec-detect 0.702 rec-false 0.381 ROC-AUC 0.789
+  fold A iforest      k=3 rec-detect 0.374 rec-false 0.156 ROC-AUC 0.631
+  fold A autoencoder  k=3 rec-detect 0.677 rec-false 0.500 ROC-AUC 0.749
+  fold B zscore       k=2 rec-detect 0.506 rec-false 0.000 ROC-AUC 0.841
+  fold B pca          k=2 rec-detect 0.630 rec-false 0.175 ROC-AUC 0.815
+  fold B iforest      k=3 rec-detect 0.139 rec-false 0.000 ROC-AUC 0.826
+  fold B autoencoder  k=2 rec-detect 0.596 rec-false 0.031 ROC-AUC 0.817
+  fold C zscore       k=3 rec-detect 0.704 rec-false 0.144 ROC-AUC 0.843
+  fold C pca          k=3 rec-detect 0.812 rec-false 0.069 ROC-AUC 0.928
+  fold C iforest      k=3 rec-detect 0.614 rec-false 0.000 ROC-AUC 0.904
+  fold C autoencoder  k=3 rec-detect 0.971 rec-false 0.419 ROC-AUC 0.937
+rate 16000 Hz
+  features K001 @ 16 kHz: 1200 windows
+  features K002 @ 16 kHz: 1202 windows
+  features K003 @ 16 kHz: 1200 windows
+  features K004 @ 16 kHz: 1200 windows
+  features K005 @ 16 kHz: 1200 windows
+  features K006 @ 16 kHz: 1200 windows
+  features KA04 @ 16 kHz: 1200 windows
+  features KA15 @ 16 kHz: 1200 windows
+  features KA16 @ 16 kHz: 1200 windows
+  features KA22 @ 16 kHz: 1203 windows
+  features KA30 @ 16 kHz: 1201 windows
+  features KB23 @ 16 kHz: 1202 windows
+  features KB24 @ 16 kHz: 1200 windows
+  features KB27 @ 16 kHz: 1204 windows
+  features KI04 @ 16 kHz: 1200 windows
+  features KI14 @ 16 kHz: 1202 windows
+  features KI16 @ 16 kHz: 1208 windows
+  features KI17 @ 16 kHz: 1204 windows
+  features KI18 @ 16 kHz: 1201 windows
+  features KI21 @ 16 kHz: 1201 windows
+  fold A zscore       k=3 rec-detect 0.466 rec-false 0.125 ROC-AUC 0.684
+  fold A pca          k=3 rec-detect 0.596 rec-false 0.138 ROC-AUC 0.767
+  fold A iforest      k=3 rec-detect 0.352 rec-false 0.000 ROC-AUC 0.695
+  fold A autoencoder  k=3 rec-detect 0.676 rec-false 0.500 ROC-AUC 0.750
+  fold B zscore       k=2 rec-detect 0.466 rec-false 0.000 ROC-AUC 0.859
+  fold B pca          k=2 rec-detect 0.566 rec-false 0.119 ROC-AUC 0.772
+  fold B iforest      k=2 rec-detect 0.348 rec-false 0.125 ROC-AUC 0.747
+  fold B autoencoder  k=2 rec-detect 0.503 rec-false 0.031 ROC-AUC 0.795
+  fold C zscore       k=3 rec-detect 0.670 rec-false 0.119 ROC-AUC 0.820
+  fold C pca          k=3 rec-detect 0.801 rec-false 0.119 ROC-AUC 0.891
+  fold C iforest      k=3 rec-detect 0.480 rec-false 0.000 ROC-AUC 0.831
+  fold C autoencoder  k=2 rec-detect 0.796 rec-false 0.056 ROC-AUC 0.910
+rate 8000 Hz
+  features K001 @ 8 kHz: 1200 windows
+  features K002 @ 8 kHz: 1203 windows
+  features K003 @ 8 kHz: 1200 windows
+  features K004 @ 8 kHz: 1200 windows
+  features K005 @ 8 kHz: 1200 windows
+  features K006 @ 8 kHz: 1200 windows
+  features KA04 @ 8 kHz: 1200 windows
+  features KA15 @ 8 kHz: 1201 windows
+  features KA16 @ 8 kHz: 1200 windows
+  features KA22 @ 8 kHz: 1203 windows
+  features KA30 @ 8 kHz: 1201 windows
+  features KB23 @ 8 kHz: 1202 windows
+  features KB24 @ 8 kHz: 1200 windows
+  features KB27 @ 8 kHz: 1204 windows
+  features KI04 @ 8 kHz: 1200 windows
+  features KI14 @ 8 kHz: 1202 windows
+  features KI16 @ 8 kHz: 1208 windows
+  features KI17 @ 8 kHz: 1204 windows
+  features KI18 @ 8 kHz: 1201 windows
+  features KI21 @ 8 kHz: 1201 windows
+  fold A zscore       k=2 rec-detect 0.492 rec-false 0.131 ROC-AUC 0.766
+  fold A pca          k=3 rec-detect 0.520 rec-false 0.125 ROC-AUC 0.763
+  fold A iforest      k=2 rec-detect 0.454 rec-false 0.044 ROC-AUC 0.689
+  fold A autoencoder  k=2 rec-detect 0.613 rec-false 0.113 ROC-AUC 0.770
+  fold B zscore       k=2 rec-detect 0.468 rec-false 0.000 ROC-AUC 0.832
+  fold B pca          k=2 rec-detect 0.379 rec-false 0.000 ROC-AUC 0.833
+  fold B iforest      k=2 rec-detect 0.258 rec-false 0.000 ROC-AUC 0.842
+  fold B autoencoder  k=2 rec-detect 0.437 rec-false 0.000 ROC-AUC 0.815
+  fold C zscore       k=2 rec-detect 0.313 rec-false 0.000 ROC-AUC 0.781
+  fold C pca          k=2 rec-detect 0.624 rec-false 0.081 ROC-AUC 0.829
+  fold C iforest      k=2 rec-detect 0.370 rec-false 0.019 ROC-AUC 0.772
+  fold C autoencoder  k=2 rec-detect 0.691 rec-false 0.081 ROC-AUC 0.853
+rate 4000 Hz
+  features K001 @ 4 kHz: 1200 windows
+  features K002 @ 4 kHz: 1203 windows
+  features K003 @ 4 kHz: 1200 windows
+  features K004 @ 4 kHz: 1200 windows
+  features K005 @ 4 kHz: 1200 windows
+  features K006 @ 4 kHz: 1200 windows
+  features KA04 @ 4 kHz: 1200 windows
+  features KA15 @ 4 kHz: 1201 windows
+  features KA16 @ 4 kHz: 1200 windows
+  features KA22 @ 4 kHz: 1203 windows
+  features KA30 @ 4 kHz: 1201 windows
+  features KB23 @ 4 kHz: 1202 windows
+  features KB24 @ 4 kHz: 1200 windows
+  features KB27 @ 4 kHz: 1204 windows
+  features KI04 @ 4 kHz: 1200 windows
+  features KI14 @ 4 kHz: 1202 windows
+  features KI16 @ 4 kHz: 1208 windows
+  features KI17 @ 4 kHz: 1204 windows
+  features KI18 @ 4 kHz: 1201 windows
+  features KI21 @ 4 kHz: 1201 windows
+  fold A zscore       k=3 rec-detect 0.434 rec-false 0.013 ROC-AUC 0.708
+  fold A pca          k=3 rec-detect 0.453 rec-false 0.062 ROC-AUC 0.701
+  fold A iforest      k=3 rec-detect 0.416 rec-false 0.000 ROC-AUC 0.663
+  fold A autoencoder  k=2 rec-detect 0.672 rec-false 0.494 ROC-AUC 0.716
+  fold B zscore       k=2 rec-detect 0.379 rec-false 0.000 ROC-AUC 0.736
+  fold B pca          k=2 rec-detect 0.434 rec-false 0.013 ROC-AUC 0.735
+  fold B iforest      k=2 rec-detect 0.350 rec-false 0.000 ROC-AUC 0.764
+  fold B autoencoder  k=2 rec-detect 0.412 rec-false 0.006 ROC-AUC 0.742
+  fold C zscore       k=3 rec-detect 0.446 rec-false 0.069 ROC-AUC 0.690
+  fold C pca          k=3 rec-detect 0.447 rec-false 0.087 ROC-AUC 0.704
+  fold C iforest      k=3 rec-detect 0.245 rec-false 0.000 ROC-AUC 0.692
+  fold C autoencoder  k=2 rec-detect 0.592 rec-false 0.169 ROC-AUC 0.739
+rate 2000 Hz
+  features K001 @ 2 kHz: 1200 windows
+  features K002 @ 2 kHz: 1203 windows
+  features K003 @ 2 kHz: 1200 windows
+  features K004 @ 2 kHz: 1200 windows
+  features K005 @ 2 kHz: 1200 windows
+  features K006 @ 2 kHz: 1200 windows
+  features KA04 @ 2 kHz: 1200 windows
+  features KA15 @ 2 kHz: 1201 windows
+  features KA16 @ 2 kHz: 1200 windows
+  features KA22 @ 2 kHz: 1203 windows
+  features KA30 @ 2 kHz: 1201 windows
+  features KB23 @ 2 kHz: 1202 windows
+  features KB24 @ 2 kHz: 1200 windows
+  features KB27 @ 2 kHz: 1204 windows
+  features KI04 @ 2 kHz: 1200 windows
+  features KI14 @ 2 kHz: 1202 windows
+  features KI16 @ 2 kHz: 1208 windows
+  features KI17 @ 2 kHz: 1204 windows
+  features KI18 @ 2 kHz: 1201 windows
+  features KI21 @ 2 kHz: 1201 windows
+  fold A zscore       k=3 rec-detect 0.497 rec-false 0.075 ROC-AUC 0.752
+  fold A pca          k=3 rec-detect 0.542 rec-false 0.194 ROC-AUC 0.720
+  fold A iforest      k=3 rec-detect 0.162 rec-false 0.000 ROC-AUC 0.657
+  fold A autoencoder  k=2 rec-detect 0.650 rec-false 0.512 ROC-AUC 0.755
+  fold B zscore       k=2 rec-detect 0.525 rec-false 0.000 ROC-AUC 0.836
+  fold B pca          k=2 rec-detect 0.529 rec-false 0.013 ROC-AUC 0.837
+  fold B iforest      k=2 rec-detect 0.031 rec-false 0.000 ROC-AUC 0.788
+  fold B autoencoder  k=2 rec-detect 0.551 rec-false 0.000 ROC-AUC 0.841
+  fold C zscore       k=3 rec-detect 0.499 rec-false 0.000 ROC-AUC 0.777
+  fold C pca          k=3 rec-detect 0.503 rec-false 0.069 ROC-AUC 0.764
+  fold C iforest      k=3 rec-detect 0.028 rec-false 0.000 ROC-AUC 0.727
+  fold C autoencoder  k=2 rec-detect 0.573 rec-false 0.000 ROC-AUC 0.821
+  features K001 @ 64 kHz: 1200 windows
+  features K002 @ 64 kHz: 1201 windows
+  features K003 @ 64 kHz: 1200 windows
+  features K004 @ 64 kHz: 1200 windows
+  features K005 @ 64 kHz: 1200 windows
+  features K006 @ 64 kHz: 1200 windows
+  features KA04 @ 64 kHz: 1199 windows
+  features KA15 @ 64 kHz: 1198 windows
+  features KA16 @ 64 kHz: 1199 windows
+  features KA22 @ 64 kHz: 1198 windows
+  features KA30 @ 64 kHz: 1200 windows
+  features KB23 @ 64 kHz: 1197 windows
+  features KB24 @ 64 kHz: 1200 windows
+  features KB27 @ 64 kHz: 1201 windows
+  features KI04 @ 64 kHz: 1200 windows
+  features KI14 @ 64 kHz: 1202 windows
+  features KI16 @ 64 kHz: 1207 windows
+  features KI17 @ 64 kHz: 1203 windows
+  features KI18 @ 64 kHz: 1198 windows
+  features KI21 @ 64 kHz: 1199 windows
+ablation no_envelope
+  fold A pca          k=3 rec-detect 0.664 rec-false 0.463 ROC-AUC 0.760
+  fold A iforest      k=3 rec-detect 0.114 rec-false 0.100 ROC-AUC 0.671
+  fold B pca          k=2 rec-detect 0.593 rec-false 0.237 ROC-AUC 0.820
+  fold B iforest      k=3 rec-detect 0.138 rec-false 0.000 ROC-AUC 0.825
+  fold C pca          k=2 rec-detect 0.836 rec-false 0.006 ROC-AUC 0.946
+  fold C iforest      k=2 rec-detect 0.780 rec-false 0.200 ROC-AUC 0.880
+ablation envelope_context
+  fold A pca          k=3 rec-detect 0.522 rec-false 0.000 ROC-AUC 0.824
+  fold A iforest      k=3 rec-detect 0.613 rec-false 0.013 ROC-AUC 0.844
+  fold B pca          k=2 rec-detect 0.396 rec-false 0.000 ROC-AUC 0.876
+  fold B iforest      k=2 rec-detect 0.235 rec-false 0.000 ROC-AUC 0.859
+  fold C pca          k=2 rec-detect 0.871 rec-false 0.325 ROC-AUC 0.826
+  fold C iforest      k=2 rec-detect 0.840 rec-false 0.269 ROC-AUC 0.840
+full-engine timing at 64 kHz
+  features K001 @ 64 kHz: 1200 windows
+  features K002 @ 64 kHz: 1201 windows
+  features K003 @ 64 kHz: 1200 windows
+  features K004 @ 64 kHz: 1200 windows
+  features K005 @ 64 kHz: 1200 windows
+  features K006 @ 64 kHz: 1200 windows
+  features KA04 @ 64 kHz: 1199 windows
+  features KA15 @ 64 kHz: 1198 windows
+  features KA16 @ 64 kHz: 1199 windows
+  features KA22 @ 64 kHz: 1198 windows
+  features KA30 @ 64 kHz: 1200 windows
+  features KB23 @ 64 kHz: 1197 windows
+  features KB24 @ 64 kHz: 1200 windows
+  features KB27 @ 64 kHz: 1201 windows
+  features KI04 @ 64 kHz: 1200 windows
+  features KI14 @ 64 kHz: 1202 windows
+  features KI16 @ 64 kHz: 1207 windows
+  features KI17 @ 64 kHz: 1203 windows
+  features KI18 @ 64 kHz: 1198 windows
+  features KI21 @ 64 kHz: 1199 windows
+  timing zscore          pipeline p50 1213 us inference p50 3.2 us RTF 175.8x paced CPU 4.2 %
+  timing pca             pipeline p50 1201 us inference p50 7.5 us RTF 176.0x paced CPU 3.9 %
+  timing iforest         pipeline p50 2880 us inference p50 1705.6 us RTF 83.4x paced CPU 6.9 %
+  timing iforest-packed  pipeline p50 1221 us inference p50 54.0 us RTF 173.6x paced CPU 4.0 %
+  timing autoencoder     pipeline p50 1179 us inference p50 9.8 us RTF 181.1x paced CPU 3.9 %
+wrote results/paderborn_benchmark.json in 12481 s
+BENCH_EXIT 0
+damage_profiles field re-parsed after extent regex fix (metadata only)

@@ -138,3 +138,61 @@ Delay per report (minutes from reported start to first alert):
 | PCA (SPE+T²) | 80 | 45 | 50 | 55 |
 | Autoencoder | 85 | 50 | 55 | 55 |
 | Isolation Forest | missed | missed | 155 | 205 |
+
+### Paderborn bearings (REAL), 6 healthy + 14 real-damage bearings, 3 folds
+
+Machine: Apple M4, Python 3.12.13, one thread. Load average at start [0.96, 1.18, 1.55], at end [1.97, 3.11, 3.54]. The laptop slept (lid closed) during feature extraction; perf_counter latencies exclude sleep, total wall time does not.
+
+| Model | Damaged recordings flagged | Healthy recordings flagged | Window ROC-AUC | Damaged bearings flagged on >50 % of recordings (A/B/C of 14) | Inference p50 | Full pipeline p50 / p99 | Real-time factor | Paced CPU |
+|---|---|---|---|---|---|---|---|---|
+| Z-score | 72 ± 5 % | 18 ± 5 % | 0.860 ± 0.024 | 9/9/13 | 3.2 µs | 1213 / 1297 µs | 176x | 4.2 % |
+| PCA (SPE+T²) | 78 ± 15 % | 28 ± 14 % | 0.868 ± 0.062 | 11/9/14 | 7.5 µs | 1201 / 1980 µs | 176x | 3.9 % |
+| Autoencoder | 78 ± 17 % | 35 ± 15 % | 0.860 ± 0.079 | 11/8/14 | 9.8 µs | 1179 / 1232 µs | 181x | 3.9 % |
+| Isolation Forest (packed) | 35 ± 29 % | 7 ± 6 % | 0.795 ± 0.133 | 0/2/11 | 54.0 µs | 1221 / 2040 µs | 174x | 4.0 % |
+
+Isolation Forest through scikit-learn: inference p50 1706 µs, pipeline p50 2880 µs, real-time factor 83x. Sizes: zscore 0.5 KiB, pca 1.4 KiB, iforest 1510.6 KiB, iforest-packed 688.1 KiB, autoencoder 3.3 KiB.
+Max lateness in paced replay: zscore 48.8 ms, pca 14.3 ms, iforest 23.2 ms, iforest-packed 14.7 ms, autoencoder 68.7 ms.
+
+#### Sampling-rate sweep (mean of 3 folds)
+
+| Rate | Feature p50 / p99 | Z-score detected / false | PCA (SPE+T²) detected / false | Autoencoder detected / false | Isolation Forest detected / false |
+|---|---|---|---|---|---|
+| 64 kHz | 1213 / 3933 µs | 72 % / 18 % | 78 % / 28 % | 78 % / 35 % | 35 % / 7 % |
+| 32 kHz | 1101 / 2707 µs | 61 % / 9 % | 71 % / 21 % | 75 % / 32 % | 38 % / 5 % |
+| 16 kHz | 498 / 1333 µs | 53 % / 8 % | 65 % / 12 % | 66 % / 20 % | 39 % / 4 % |
+| 8 kHz | 191 / 337 µs | 42 % / 4 % | 51 % / 7 % | 58 % / 6 % | 36 % / 2 % |
+| 4 kHz | 120 / 186 µs | 42 % / 3 % | 44 % / 5 % | 56 % / 22 % | 34 % / 0 % |
+| 2 kHz | 87 / 143 µs | 51 % / 2 % | 52 % / 9 % | 59 % / 17 % | 7 % / 0 % |
+
+#### Feature-group ablation at 64 kHz (mean of 3 folds)
+
+| Features | PCA detected | PCA false | PCA ROC-AUC | IForest detected | IForest false | IForest ROC-AUC |
+|---|---|---|---|---|---|---|
+| all 15 | 78 % | 28 % | 0.868 | 35 % | 7 % | 0.795 |
+| no_envelope | 70 % | 24 % | 0.842 | 34 % | 10 % | 0.792 |
+| envelope_context | 60 % | 11 % | 0.842 | 56 % | 9 % | 0.848 |
+
+#### Per bearing at 64 kHz: % of 80 recordings flagged (PCA)
+
+| Bearing | Damage (from profile PDF) | All features | Envelope + context |
+|---|---|---|---|
+| K001 | healthy | 0 % | 0 % |
+| K002 | healthy | 91 % | 0 % |
+| K003 | healthy | 0 % | 0 % |
+| K004 | healthy | 24 % | 0 % |
+| K005 | healthy | 49 % | 65 % |
+| K006 | healthy | 5 % | 0 % |
+| KA04 | OR, combination S, extent 1 | 100 % | 100 % |
+| KA15 | OR, combination S, extent 1 | 30 % | 23 % |
+| KA16 | OR OR, combination R R, extent 2 2 | 100 % | 100 % |
+| KA22 | OR, combination S, extent 1 | 53 % | 9 % |
+| KA30 | OR, combination R, extent 1 | 59 % | 40 % |
+| KB23 | IR IR OR, combination R R R, extent 1 2 2 | 100 % | 100 % |
+| KB24 | IR OR, combination M M, extent 3 n/a | 100 % | 42 % |
+| KB27 | OR IR, combination M M, extent 1 1 | 47 % | 65 % |
+| KI04 | IR OR, combination M M, extent 1 n/a | 70 % | 83 % |
+| KI14 | IR OR, combination M M, extent 1 n/a | 69 % | 28 % |
+| KI16 | IR, combination S, extent 3 | 100 % | 71 % |
+| KI17 | IR IR, combination R R, extent 1 1 | 98 % | 41 % |
+| KI18 | IR, combination S, extent 2 | 100 % | 92 % |
+| KI21 | IR, combination S, extent 1 | 66 % | 42 % |
