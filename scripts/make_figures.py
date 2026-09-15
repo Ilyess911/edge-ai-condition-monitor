@@ -350,6 +350,137 @@ def fig_metropt(mb):
     save(fig, "metropt_timeline.png")
 
 
+
+# ----------------------------------------------------------------------------- Paderborn (REAL)
+PB_MODELS = ["zscore", "pca", "iforest", "autoencoder"]
+
+
+def _pb_fold_mean(rate_res, model, key):
+    return float(np.mean([rate_res["folds"][f][model][key] for f in "ABC"]))
+
+
+def fig_paderborn_envelope():
+    from src.data.paderborn import CACHE, defect_orders, load_bearing
+    from src.features.bearing import BearingFeatureExtractor  # noqa: F401
+
+    if not (CACHE / "K001.npz").exists() or not (CACHE / "KA04.npz").exists():
+        return
+    fs, n = 64_000, 32_000
+    fig, axes = plt.subplots(1, 2, figsize=(12, 3.2))
+    for code, color, label in (("K002", "#8c8b87", "K002 healthy"), ("KA04", ALERT, "KA04 outer-race pitting")):
+        rec = [r for r in load_bearing(code) if r.condition == "N15_M07_F10"][0]
+        v = rec.vibration[:n].astype(float)
+        v -= v.mean()
+        t = np.arange(3200) / fs * 1000
+        axes[0].plot(t, v[:3200], color=color, lw=0.6, label=label)
+        spec = np.fft.rfft(v)
+        freqs = np.fft.rfftfreq(n, 1 / fs)
+        spec[freqs < 1000] = 0
+        analytic = np.zeros(n, dtype=complex)
+        analytic[: len(spec)] = 2 * spec
+        env = np.abs(np.fft.ifft(analytic))
+        env -= env.mean()
+        env_p = np.abs(np.fft.rfft(env * np.hanning(n))) ** 2
+        m = freqs <= 400
+        axes[1].plot(freqs[m], env_p[m] / env_p[m].max(), color=color, lw=0.9, label=label)
+        shaft = rec.speed_rpm / 60
+    bpfo = defect_orders()["bpfo"] * shaft
+    for k in (1, 2, 3):
+        axes[1].axvline(k * bpfo, color=INK2, lw=0.8, ls="--")
+    axes[1].text(bpfo + 4, 0.93, "BPFO", ha="left", fontsize=7.5, color=INK2,
+                 transform=axes[1].get_xaxis_transform())
+    axes[0].set(title="Raw vibration, 50 ms", xlabel="time [ms]", ylabel="acceleration")
+    axes[1].set(title="Envelope spectrum above 1 kHz (normalised); dashed = 1-3 x BPFO",
+                xlabel="frequency [Hz]", ylabel="relative power")
+    fig.suptitle("REAL Paderborn recordings at 64 kHz, 1500 rpm, 0.7 Nm, 1000 N", x=0.01, ha="left",
+                 fontsize=10, fontweight="bold", y=1.03)
+    axes[0].legend(loc="upper right", fontsize=7.5)
+    save(fig, "paderborn_envelope.png")
+
+
+def fig_paderborn_sampling(pb):
+    rates = sorted((int(r) for r in pb["rates"]), reverse=False)
+    labels = [f"{r // 1000}" for r in rates]
+    fig, (a1, a2, a3) = plt.subplots(1, 3, figsize=(12, 3.4))
+    for name in PB_MODELS:
+        det = [_pb_fold_mean(pb["rates"][str(r)], name, "recording_detection_rate") for r in rates]
+        fa = [_pb_fold_mean(pb["rates"][str(r)], name, "recording_false_alarm_rate") for r in rates]
+        a1.plot(labels, det, "-o", color=FAMILY[name], lw=2, ms=5, label=LABEL[name])
+        a2.plot(labels, fa, "-o", color=FAMILY[name], lw=2, ms=5)
+    a1.set(title="Damaged recordings flagged", xlabel="sampling rate [kHz]", ylabel="share of recordings",
+           ylim=(0, 1))
+    a1.legend(fontsize=7.5)
+    a2.set(title="Healthy recordings flagged (false alarms)", xlabel="sampling rate [kHz]", ylim=(0, 1))
+    feat = [pb["rates"][str(r)]["cost"]["feature_latency"]["p50_us"] for r in rates]
+    a3.plot(labels, feat, "-o", color=INK, lw=2, ms=5)
+    a3.set(title="Feature extraction per window (p50)", xlabel="sampling rate [kHz]", ylabel="µs")
+    a3.set_ylim(bottom=0)
+    fig.suptitle("REAL Paderborn bearings: mean of 3 bearing-held-out folds; 0.5 s windows, "
+                 "decimated from 64 kHz with anti-aliasing", x=0.01, ha="left", fontsize=10,
+                 fontweight="bold", y=1.03)
+    save(fig, "paderborn_sampling_rate.png")
+
+
+def fig_paderborn_tradeoff(pb):
+    """Balanced detection (TPR - FPR on recordings) against measured feature cost."""
+    rates = sorted(int(r) for r in pb["rates"])
+    fig, ax = plt.subplots(figsize=(11, 4.4))
+    for name in PB_MODELS:
+        xs, ys = [], []
+        for r in rates:
+            res = pb["rates"][str(r)]
+            xs.append(res["cost"]["feature_latency"]["p50_us"])
+            ys.append(_pb_fold_mean(res, name, "recording_detection_rate")
+                      - _pb_fold_mean(res, name, "recording_false_alarm_rate"))
+        ax.plot(xs, ys, "-o", color=FAMILY[name], lw=2, ms=6, label=LABEL[name])
+        if name == "pca":
+            for x, y, r in zip(xs, ys, rates):
+                ax.annotate(f"{r // 1000} kHz", (x, y), textcoords="offset points", xytext=(5, -12),
+                            fontsize=7, color=INK2)
+    ax.set_xscale("log")
+    ax.set_xlabel("feature extraction per window, p50 [µs], log scale (model inference adds 3-66 µs)")
+    ax.set_ylabel("detection rate - false-alarm rate")
+    ax.axhline(0, color=GRID, lw=1)
+    ax.set_title("REAL bearings: detection quality vs computational cost across sampling rates "
+                 "(laptop core, one thread)", loc="left")
+    ax.legend(fontsize=8, ncol=4, loc="upper left")
+    save(fig, "paderborn_tradeoff.png")
+
+
+def fig_paderborn_bearings(pb):
+    res64 = pb["rates"]["64000"]
+    abl = pb["feature_group_ablation_64k"]["envelope_context"]
+    prof = pb["damage_profiles"]
+    healthy = ["K001", "K002", "K003", "K004", "K005", "K006"]
+    damaged = list(prof)
+    cols = [("Z-score\nall", res64, "zscore"), ("PCA\nall", res64, "pca"),
+            ("Autoenc.\nall", res64, "autoencoder"), ("IForest\nall", res64, "iforest"),
+            ("PCA\nenvelope only", abl, "pca"), ("IForest\nenvelope only", abl, "iforest")]
+    rows = healthy + damaged
+    mat = np.zeros((len(rows), len(cols)))
+    for j, (_, block, model) in enumerate(cols):
+        for i, code in enumerate(rows):
+            vals = [block["folds"][f][model]["per_bearing"][code]["flagged"] /
+                    block["folds"][f][model]["per_bearing"][code]["recordings"]
+                    for f in "ABC" if code in block["folds"][f][model]["per_bearing"]]
+            mat[i, j] = np.mean(vals)
+    fig, ax = plt.subplots(figsize=(8, 8.5))
+    ax.imshow(mat, cmap="Blues", vmin=0, vmax=1, aspect="auto")
+    for i in range(len(rows)):
+        for j in range(len(cols)):
+            ax.text(j, i, f"{100 * mat[i, j]:.0f}", ha="center", va="center", fontsize=7.5,
+                    color="white" if mat[i, j] > 0.6 else INK)
+    ylabels = [f"{c}  healthy" for c in healthy] + [
+        f"{c}  {prof[c]['component'] or ''} ({prof[c]['combination'] or ''})" for c in damaged]
+    ax.set_yticks(range(len(rows)), ylabels, fontsize=8)
+    ax.set_xticks(range(len(cols)), [c[0] for c in cols], fontsize=8)
+    ax.axhline(len(healthy) - 0.5, color="white", lw=3)
+    ax.grid(False)
+    ax.set_title("REAL bearings at 64 kHz: % of 80 recordings flagged\n(healthy rows = false alarms, "
+                 "held out in one fold; damaged rows = mean of 3 folds)", loc="left")
+    save(fig, "paderborn_bearings.png")
+
+
 def main() -> None:
     ASSETS.mkdir(exist_ok=True)
     cfg = load_config("configs/simulated.toml")
@@ -369,6 +500,12 @@ def main() -> None:
     mb = load("metropt_benchmark.json")
     if mb:
         fig_metropt(mb)
+    pb = load("paderborn_benchmark.json")
+    if pb:
+        fig_paderborn_envelope()
+        fig_paderborn_sampling(pb)
+        fig_paderborn_tradeoff(pb)
+        fig_paderborn_bearings(pb)
 
 
 if __name__ == "__main__":

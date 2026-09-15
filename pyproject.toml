@@ -12,6 +12,7 @@ dependencies = [
     "scikit-learn>=1.4",
     "pandas>=2.1",
     "psutil>=5.9",
+    "pypdf>=6.18.1",
 ]
 
 [project.optional-dependencies]

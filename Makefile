@@ -1,4 +1,4 @@
-.PHONY: install test demo benchmark benchmark-quick sweep metropt figures dashboard reproduce
+.PHONY: install test demo benchmark benchmark-quick sweep metropt paderborn figures summary dashboard reproduce
 
 install:
 	uv sync --all-extras
@@ -23,10 +23,17 @@ metropt:
 	uv run python scripts/run_metropt.py
 	uv run python scripts/run_metropt.py --drop-features oil_level_fraction
 
+paderborn:
+	uv run python scripts/download_paderborn.py
+	uv run python scripts/run_paderborn.py
+
 figures:
 	uv run python scripts/make_figures.py
+
+summary:
+	uv run python scripts/summarize_results.py > results/summary.md
 
 dashboard:
 	uv run streamlit run src/dashboard/app.py
 
-reproduce: test benchmark sweep metropt figures
+reproduce: test paderborn metropt benchmark sweep figures summary

@@ -1,0 +1,62 @@
+# Paderborn real-bearing track. Fixed before the first detector evaluation
+# (JOURNAL.md, 2026-09-15). Splits are BY BEARING: a bearing never contributes to
+# two roles in the same fold.
+
+[stream]
+fs = 64000         # Hz, native sampling rate of vibration and motor current
+window_s = 0.5     # 32,000 samples: 2 Hz resolution, several defect cycles even at 900 rpm
+hop_s = 0.25       # one decision every 0.25 s
+chunk_s = 0.05     # 3,200 samples per DAQ buffer
+
+[cleaning]
+# vibration, phase current [A], speed [rpm], torque [Nm], radial force [N]
+low  = [-100.0, -20.0,    0.0, -10.0,    0.0]
+high = [ 100.0,  20.0, 4000.0,  10.0, 5000.0]
+max_hold_s = 0.01
+
+[threshold]
+quantile = 0.995
+
+[alerts]
+raise_after = "auto"
+max_raise_after = 8    # 8 windows = 2 s, half a recording
+clear_after = 4
+
+# Healthy bearings rotate between training (3), calibration (1) and held-out
+# test (2). All 14 bearings with real damage are test data in every fold.
+[[folds]]
+name = "A"
+train = ["K004", "K005", "K006"]
+calib = ["K003"]
+test_healthy = ["K001", "K002"]
+
+[[folds]]
+name = "B"
+train = ["K006", "K001", "K002"]
+calib = ["K005"]
+test_healthy = ["K003", "K004"]
+
+[[folds]]
+name = "C"
+train = ["K002", "K003", "K004"]
+calib = ["K001"]
+test_healthy = ["K005", "K006"]
+
+[sweep]
+rates_hz = [64000, 32000, 16000, 8000, 4000, 2000]
+
+[models.zscore]
+detector = "zscore"
+
+[models.pca]
+detector = "pca"
+variance = 0.95
+
+[models.iforest]
+detector = "iforest"
+n_estimators = 100
+max_samples = 256
+
+[models.autoencoder]
+detector = "autoencoder"
+hidden = [8, 3, 8]

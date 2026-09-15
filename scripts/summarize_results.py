@@ -170,6 +170,84 @@ def metropt(m, title):
         print(f"| {LABEL[name]} | " + " | ".join(cells) + " |")
 
 
+def paderborn(pb):
+    import numpy as np
+
+    models = ("zscore", "pca", "autoencoder", "iforest")
+
+    def fm(block, model, key):
+        vals = [block["folds"][f][model][key] for f in "ABC"]
+        return float(np.mean(vals)), float(np.std(vals))
+
+    env = pb["environment"]
+    print("\n### Paderborn bearings (REAL), 6 healthy + 14 real-damage bearings, 3 folds\n")
+    print(f"Machine: {env['cpu']}, Python {env['python']}, one thread. Load average at start "
+          f"{pb['environment_start']['load_average_1_5_15']}, at end {env['load_average_1_5_15']}. "
+          "The laptop slept (lid closed) during feature extraction; perf_counter latencies exclude "
+          "sleep, total wall time does not.\n")
+    r64 = pb["rates"]["64000"]
+    t = pb["pipeline_timing_64k"]
+    print("| Model | Damaged recordings flagged | Healthy recordings flagged | Window ROC-AUC | "
+          "Damaged bearings flagged on >50 % of recordings (A/B/C of 14) | Inference p50 | "
+          "Full pipeline p50 / p99 | Real-time factor | Paced CPU |")
+    print("|---|---|---|---|---|---|---|---|---|")
+    for m in models:
+        d, ds = fm(r64, m, "recording_detection_rate")
+        f, fs_ = fm(r64, m, "recording_false_alarm_rate")
+        a, as_ = fm(r64, m, "window_roc_auc")
+        maj = "/".join(str(r64["folds"][k][m]["bearings_detected_majority"]) for k in "ABC")
+        key = "iforest-packed" if m == "iforest" else m
+        tm = t[key]
+        print(f"| {LABEL[m]}{' (packed)' if m == 'iforest' else ''} | {100 * d:.0f} ± {100 * ds:.0f} % | "
+              f"{100 * f:.0f} ± {100 * fs_:.0f} % | {a:.3f} ± {as_:.3f} | {maj} | "
+              f"{tm['inference_latency']['p50_us']:.1f} µs | {tm['pipeline_latency']['p50_us']:.0f} / "
+              f"{tm['pipeline_latency']['p99_us']:.0f} µs | {tm['realtime_factor_mean']:.0f}x | "
+              f"{100 * tm['paced_cpu_utilisation']:.1f} % |")
+    sk = t["iforest"]
+    print(f"\nIsolation Forest through scikit-learn: inference p50 {sk['inference_latency']['p50_us']:.0f} µs, "
+          f"pipeline p50 {sk['pipeline_latency']['p50_us']:.0f} µs, real-time factor "
+          f"{sk['realtime_factor_mean']:.0f}x. Sizes: " + ", ".join(
+              f"{k} {v['serialized_kib']:.1f} KiB" for k, v in t.items()) + ".")
+    print("Max lateness in paced replay: " + ", ".join(
+        f"{k} {v['paced_max_lateness_ms']:.1f} ms" for k, v in t.items()) + ".")
+
+    print("\n#### Sampling-rate sweep (mean of 3 folds)\n")
+    print("| Rate | Feature p50 / p99 | " + " | ".join(f"{LABEL[m]} detected / false" for m in models) + " |")
+    print("|---|---|" + "---|" * len(models))
+    for rate in sorted(pb["rates"], key=int, reverse=True):
+        rr = pb["rates"][rate]
+        fl = rr["cost"]["feature_latency"]
+        cells = [f"{100 * fm(rr, m, 'recording_detection_rate')[0]:.0f} % / "
+                 f"{100 * fm(rr, m, 'recording_false_alarm_rate')[0]:.0f} %" for m in models]
+        print(f"| {int(rate) // 1000} kHz | {fl['p50_us']:.0f} / {fl['p99_us']:.0f} µs | " + " | ".join(cells) + " |")
+
+    print("\n#### Feature-group ablation at 64 kHz (mean of 3 folds)\n")
+    print("| Features | PCA detected | PCA false | PCA ROC-AUC | IForest detected | IForest false | IForest ROC-AUC |")
+    print("|---|---|---|---|---|---|---|")
+    groups = [("all 15", r64)] + [(g, a) for g, a in pb["feature_group_ablation_64k"].items()]
+    for g, blk in groups:
+        row = []
+        for m in ("pca", "iforest"):
+            row += [f"{100 * fm(blk, m, 'recording_detection_rate')[0]:.0f} %",
+                    f"{100 * fm(blk, m, 'recording_false_alarm_rate')[0]:.0f} %",
+                    f"{fm(blk, m, 'window_roc_auc')[0]:.3f}"]
+        print(f"| {g} | " + " | ".join(row) + " |")
+
+    print("\n#### Per bearing at 64 kHz: % of 80 recordings flagged (PCA)\n")
+    abl = pb["feature_group_ablation_64k"]["envelope_context"]
+    print("| Bearing | Damage (from profile PDF) | All features | Envelope + context |")
+    print("|---|---|---|---|")
+    prof = pb["damage_profiles"]
+    for code in ["K001", "K002", "K003", "K004", "K005", "K006"] + list(prof):
+        def pct(block):
+            v = [block["folds"][f]["pca"]["per_bearing"][code]["flagged"] / 80
+                 for f in "ABC" if code in block["folds"][f]["pca"]["per_bearing"]]
+            return f"{100 * np.mean(v):.0f} %"
+        desc = "healthy" if code not in prof else (
+            f"{prof[code]['component']}, combination {prof[code]['combination']}, extent {prof[code]['extent']}")
+        print(f"| {code} | {desc} | {pct(r64)} | {pct(abl)} |")
+
+
 def main():
     b = load("simulated_benchmark.json")
     if b:
@@ -183,6 +261,9 @@ def main():
     mp = load("metropt_benchmark_posthoc_drop_oil_level_fraction.json")
     if mp:
         metropt(mp, "MetroPT-3 POST-HOC ablation: without oil_level_fraction")
+    pb = load("paderborn_benchmark.json")
+    if pb:
+        paderborn(pb)
 
 
 if __name__ == "__main__":
