@@ -113,7 +113,7 @@ and remove wording the measurements do not support.
 - Final benchmark rerun (simulated track, sampling sweep, MetroPT-3, post-hoc
   ablation), figures regenerated, `results/summary.md` generated from the JSON.
 - New EXP-010: hot-loop vs paced latency.
-- `docs/experiments.md`, `docs/interview_notes.md`, README rewritten from the
+- `docs/experiments.md` and README rewritten from the
   generated tables; `docs/hardware_deployment.md` split into implemented vs
   proposed.
 - Code cleanup: removed unused helpers (`microbench`, an unused property and

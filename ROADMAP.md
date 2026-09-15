@@ -68,12 +68,10 @@ claimed before it exists.
 - [ ] C port of features and PCA / packed-forest scoring
 - [ ] int8 quantization study
 
-## Phase 7 — Application Ready
+## Phase 7 — Release
 
 - [x] README with measured results and limitations
 - [x] `docs/experiments.md` experiment log
-- [x] `docs/application_pitch.md`
 - [x] `docs/research_extension.md`
-- [x] `docs/interview_notes.md`
 - [x] Critical methodology review applied (JOURNAL.md, session 2)
 - [x] CI running the test suite
