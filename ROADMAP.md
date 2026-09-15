@@ -58,7 +58,7 @@ claimed before it exists.
 - [x] Detection vs latency trade-off with Pareto frontier
 - [x] Sampling-rate trade-off
 - [x] MetroPT-3 timeline
-- [x] Optional Streamlit dashboard
+- [x] Optional Streamlit dashboard, replaying real Paderborn bearings
 
 ## Phase 6 — Deployment Path
 

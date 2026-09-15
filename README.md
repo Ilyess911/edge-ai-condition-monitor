@@ -197,9 +197,23 @@ Label-free persistence cut Isolation Forest's false alarms from 10.47 to 0.79 pe
 
 ## Demo
 
+**Dashboard on real bearings** (needs `make paderborn`):
+
 ```bash
-uv run python scripts/stream_demo.py --speed 6      # SIMULATED 3-minute stream, PCA, paced at 6x the 1 kHz clock
-uv run streamlit run src/dashboard/app.py           # optional dashboard, same engine
+uv run streamlit run src/dashboard/app.py
+```
+
+Pick a fold, a detector, a feature set and a sampling rate; the monitor is fitted and calibrated exactly as in
+that benchmark fold. Then replay a bearing it never saw (a held-out healthy one or one of the 14 damaged ones)
+through the streaming engine at the 64 kHz sensor clock or faster. It shows the live vibration, envelope energy
+at BPFO, score against threshold, health state, alerts per recording and measured latency, with the ground
+truth displayed but hidden from the detector. Its decisions were checked to match the benchmark's for the same
+recordings (fold A, PCA: healthy K002 flagged on 1 of its first 2 recordings, damaged KA04 on 2 of 2).
+
+**Terminal demo** (SIMULATED stream, exact fault onsets):
+
+```bash
+uv run python scripts/stream_demo.py --speed 6      # PCA, paced at 6x the 1 kHz clock
 ```
 
 Excerpt of an actual terminal run (`results/logs/stream_demo.log`):
@@ -232,7 +246,7 @@ edge-ai-condition-monitor/
 │   ├── streaming/            streaming engine with per-stage timing, paced/unpaced replay
 │   ├── alerts/               alert engine (persistence, hysteresis)
 │   ├── benchmarking/         metrics, chance control, profiling, Paderborn and simulated tracks
-│   └── dashboard/            optional Streamlit app
+│   └── dashboard/            optional Streamlit app replaying real Paderborn bearings
 ├── scripts/                  downloads, benchmarks, sweeps, figures, summary, demo
 ├── tests/                    39 tests: parity, chunk invariance, streaming = offline, replay = engine, metrics
 ├── results/                  JSON of every measurement, summary.md, raw logs

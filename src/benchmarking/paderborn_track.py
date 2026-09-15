@@ -1,4 +1,4 @@
-"""Evaluation glue for the Paderborn real-bearing track.
+"""Evaluation glue for the Paderborn real-bearing track (shared by the benchmark and the dashboard).
 
 Features come out of the StreamingEngine (one engine run per 4 s recording,
 reset in between because recordings are not continuous). Scoring and alerting
@@ -16,6 +16,7 @@ from scipy.signal import resample_poly
 from sklearn.metrics import average_precision_score, roc_auc_score
 
 from src.alerts.engine import AlertEngine
+from src.config import ROOT, detector_kwargs
 from src.data.paderborn import FS, Recording
 from src.features.bearing import BearingFeatureExtractor
 from src.preprocessing.cleaning import SampleCleaner
@@ -40,11 +41,15 @@ def recording_signals(rec: Recording, fs: float) -> np.ndarray:
 
 
 def make_engine(cfg: dict, fs: float, detector=None, alerts: AlertEngine | None = None,
-                keep_features: bool = False) -> StreamingEngine:
+                keep_features: bool = False, feature_idx: list[int] | None = None) -> StreamingEngine:
     window, hop, _ = geometry(cfg, fs)
     c = cfg["cleaning"]
     cleaner = SampleCleaner(c["low"], c["high"], max_hold=max(1, int(c["max_hold_s"] * fs)))
-    return StreamingEngine(fs, window, hop, cleaner, BearingFeatureExtractor(fs, window),
+    extractor = BearingFeatureExtractor(fs, window)
+    if feature_idx is not None:
+        full = extractor
+        extractor = lambda w: full(w)[feature_idx]  # noqa: E731
+    return StreamingEngine(fs, window, hop, cleaner, extractor,
                            detector or NullDetector(), alerts, keep_features=keep_features)
 
 
@@ -74,6 +79,46 @@ def extract_bearing(cfg: dict, recordings: list[Recording], fs: float) -> Bearin
         out.ingest_ns_per_sample.append(float(rep.ingest_ns.sum() / rep.samples))
         out.throughput_sps.append(rep.throughput_sps)
     return out
+
+
+FEATURE_CACHE = ROOT / "data" / "cache" / "paderborn_features"
+
+
+def load_features(cfg: dict, fs: float, codes, verbose: bool = False) -> dict[str, BearingFeatures]:
+    """Features per bearing at `fs`, extracted once through the engine and cached."""
+    from src.data.paderborn import load_bearing
+
+    FEATURE_CACHE.mkdir(parents=True, exist_ok=True)
+    out = {}
+    for code in codes:
+        path = FEATURE_CACHE / f"{code}_{int(fs)}.npz"
+        if path.exists():
+            z = np.load(path, allow_pickle=False)
+            bounds = np.cumsum(np.concatenate([[0], z["n_windows"]]))
+            pairs = list(zip(bounds, bounds[1:]))
+            bf = BearingFeatures(code, [z["features"][a:b] for a, b in pairs], list(z["conditions"]),
+                                 [z["feature_ns"][a:b] for a, b in pairs],
+                                 list(z["ingest_ns_per_sample"]), list(z["throughput_sps"]))
+        else:
+            bf = extract_bearing(cfg, load_bearing(code), fs)
+            np.savez(path, features=np.vstack(bf.features),
+                     n_windows=np.array([len(f) for f in bf.features]),
+                     conditions=np.array(bf.conditions), feature_ns=np.concatenate(bf.feature_ns),
+                     ingest_ns_per_sample=np.array(bf.ingest_ns_per_sample),
+                     throughput_sps=np.array(bf.throughput_sps))
+        out[code] = bf
+        if verbose:
+            print(f"  features {code} @ {fs / 1000:.0f} kHz: {sum(len(f) for f in bf.features)} windows",
+                  flush=True)
+    return out
+
+
+def subset(feats: dict[str, BearingFeatures], idx: list[int] | None) -> dict[str, BearingFeatures]:
+    if idx is None:
+        return feats
+    return {c: BearingFeatures(c, [f[:, idx] for f in bf.features], bf.conditions, bf.feature_ns,
+                               bf.ingest_ns_per_sample, bf.throughput_sps)
+            for c, bf in feats.items()}
 
 
 def replay_alerts(scores: np.ndarray, hop_s: float, threshold: float, raise_after: int,
@@ -109,6 +154,40 @@ def longest_run_within(scores_per_rec: list[np.ndarray], threshold: float) -> in
             cur = cur + 1 if v > threshold else 0
             best = max(best, cur)
     return best
+
+
+@dataclass
+class FittedMonitor:
+    scorer: object  # detector used for scoring (packed runtime for Isolation Forest)
+    detector: object  # fitted detector as trained
+    threshold: float
+    raise_after: int
+    fit_s: float
+    train_windows: int
+
+
+def fit_fold(cfg: dict, feats: dict[str, BearingFeatures], fold: dict, model_cfg: dict) -> FittedMonitor:
+    """Fit on the fold's training bearings, calibrate threshold and persistence on its
+    calibration bearing. No damaged bearing and no held-out healthy bearing is touched."""
+    import time
+
+    from src.inference.packed_forest import PackedIsolationForestDetector
+    from src.inference.threshold import calibrate_threshold
+    from src.models.detectors import build
+
+    kind, kwargs = detector_kwargs(model_cfg)
+    X_train = np.vstack([feats[c].stacked for c in fold["train"]])
+    t0 = time.perf_counter()
+    det = build(kind, **kwargs).fit(X_train)
+    fit_s = time.perf_counter() - t0
+    scorer = PackedIsolationForestDetector(det) if kind == "iforest" else det
+    calib_scores: list[np.ndarray] = []
+    for code in fold["calib"]:
+        s, _ = score_recordings(scorer, feats[code])
+        calib_scores += s
+    thr = calibrate_threshold(np.concatenate(calib_scores), cfg["threshold"]["quantile"])
+    k = min(longest_run_within(calib_scores, thr) + 1, cfg["alerts"]["max_raise_after"])
+    return FittedMonitor(scorer, det, thr, k, fit_s, int(len(X_train)))
 
 
 def evaluate_fold(test: dict[str, tuple[list[np.ndarray], bool]], threshold: float,

@@ -31,6 +31,20 @@ FEATURE_NAMES = (
 )
 BAND_EDGES_HZ = (0.0, 1_000.0, 4_000.0, 10_000.0, np.inf)
 
+# Envelope energy at BPFO/BPFI is locked to shaft speed and bearing geometry;
+# broadband statistics can also pick up differences between mountings or
+# recording sessions. The ablation compares the groups.
+FEATURE_GROUPS = {
+    "all": None,
+    "no_envelope": [n for n in FEATURE_NAMES if not n.startswith("env_")],
+    "envelope_context": ["env_bpfo", "env_bpfi", "speed", "torque", "force"],
+}
+
+
+def group_indices(group: str) -> list[int] | None:
+    names = FEATURE_GROUPS[group]
+    return None if names is None else [FEATURE_NAMES.index(n) for n in names]
+
 
 class BearingFeatureExtractor:
     def __init__(self, fs: float, window: int, envelope_low_hz: float = 1_000.0):

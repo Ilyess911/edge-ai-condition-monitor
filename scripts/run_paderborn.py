@@ -26,62 +26,15 @@ from src.benchmarking import paderborn_track as pt  # noqa: E402
 from src.benchmarking.profiling import environment, latency_summary  # noqa: E402
 from src.config import ROOT, detector_kwargs, load_config  # noqa: E402
 from src.data.paderborn import HEALTHY, REAL_DAMAGE, damage_profile, load_bearing  # noqa: E402
-from src.features.bearing import FEATURE_NAMES  # noqa: E402
+from src.features.bearing import FEATURE_GROUPS, group_indices  # noqa: E402
 from src.inference.packed_forest import PackedIsolationForestDetector  # noqa: E402
-from src.inference.threshold import calibrate_threshold  # noqa: E402
 from src.models.detectors import build  # noqa: E402
 
-FEAT_CACHE = ROOT / "data" / "cache" / "paderborn_features"
-# Feature-group ablation at 64 kHz. Envelope energy at BPFO/BPFI is locked to
-# shaft speed and bearing geometry; broadband statistics can also pick up
-# differences between recording sessions or mountings. Comparing the groups
-# shows which kind of evidence the detectors rely on.
-GROUPS = {
-    "all": None,
-    "no_envelope": [n for n in FEATURE_NAMES if not n.startswith("env_")],
-    "envelope_context": ["env_bpfo", "env_bpfi", "speed", "torque", "force"],
-}
 BEARINGS = HEALTHY + REAL_DAMAGE
 
 
 def features_at_rate(cfg: dict, fs: float) -> dict[str, pt.BearingFeatures]:
-    out = {}
-    FEAT_CACHE.mkdir(parents=True, exist_ok=True)
-    for code in BEARINGS:
-        path = FEAT_CACHE / f"{code}_{int(fs)}.npz"
-        if path.exists():
-            z = np.load(path, allow_pickle=False)
-            n = z["n_windows"]
-            bounds = np.cumsum(np.concatenate([[0], n]))
-            bf = pt.BearingFeatures(code)
-            bf.features = [z["features"][a:b] for a, b in zip(bounds, bounds[1:])]
-            bf.conditions = list(z["conditions"])
-            bf.feature_ns = [z["feature_ns"][a:b] for a, b in zip(bounds, bounds[1:])]
-            bf.ingest_ns_per_sample = list(z["ingest_ns_per_sample"])
-            bf.throughput_sps = list(z["throughput_sps"])
-        else:
-            bf = pt.extract_bearing(cfg, load_bearing(code), fs)
-            np.savez(path, features=np.vstack(bf.features),
-                     n_windows=np.array([len(f) for f in bf.features]),
-                     conditions=np.array(bf.conditions), feature_ns=np.concatenate(bf.feature_ns),
-                     ingest_ns_per_sample=np.array(bf.ingest_ns_per_sample),
-                     throughput_sps=np.array(bf.throughput_sps))
-        out[code] = bf
-        print(f"  features {code} @ {fs / 1000:.0f} kHz: {sum(len(f) for f in bf.features)} windows",
-              flush=True)
-    return out
-
-
-def subset(feats: dict[str, pt.BearingFeatures], names: list[str] | None) -> dict[str, pt.BearingFeatures]:
-    if names is None:
-        return feats
-    idx = [FEATURE_NAMES.index(n) for n in names]
-    out = {}
-    for code, bf in feats.items():
-        sub = pt.BearingFeatures(code, [f[:, idx] for f in bf.features], bf.conditions,
-                                 bf.feature_ns, bf.ingest_ns_per_sample, bf.throughput_sps)
-        out[code] = sub
-    return out
+    return pt.load_features(cfg, fs, BEARINGS, verbose=True)
 
 
 def run_rate(cfg: dict, fs: float, feats: dict[str, pt.BearingFeatures], timing: bool,
@@ -98,20 +51,10 @@ def run_rate(cfg: dict, fs: float, feats: dict[str, pt.BearingFeatures], timing:
         [x for bf in feats.values() for x in bf.throughput_sps]))
     inference = {}
     for fold in cfg["folds"]:
-        X_train = np.vstack([feats[c].stacked for c in fold["train"]])
         fold_res = {}
         for name, mcfg in (models or cfg["models"]).items():
-            kind, kwargs = detector_kwargs(mcfg)
-            t0 = time.perf_counter()
-            det = build(kind, **kwargs).fit(X_train)
-            fit_s = time.perf_counter() - t0
-            scorer = PackedIsolationForestDetector(det) if kind == "iforest" else det
-            calib_scores = []
-            for c in fold["calib"]:
-                s, _ = pt.score_recordings(scorer, feats[c])
-                calib_scores += s
-            thr = calibrate_threshold(np.concatenate(calib_scores), cfg["threshold"]["quantile"])
-            k = min(pt.longest_run_within(calib_scores, thr) + 1, a["max_raise_after"])
+            mon = pt.fit_fold(cfg, feats, fold, mcfg)
+            scorer, thr, k = mon.scorer, mon.threshold, mon.raise_after
             test = {}
             lat = []
             for c in fold["test_healthy"] + list(REAL_DAMAGE):
@@ -119,8 +62,8 @@ def run_rate(cfg: dict, fs: float, feats: dict[str, pt.BearingFeatures], timing:
                 test[c] = (s, c in REAL_DAMAGE)
                 lat.append(ns)
             ev = pt.evaluate_fold(test, thr, k, a["clear_after"], hop_s)
-            ev.update({"threshold": thr, "raise_after": k, "fit_s": fit_s,
-                       "train_windows": int(len(X_train))})
+            ev.update({"threshold": thr, "raise_after": k, "fit_s": mon.fit_s,
+                       "train_windows": mon.train_windows})
             fold_res[name] = ev
             inference.setdefault(name, []).append(np.concatenate(lat))
             print(f"  fold {fold['name']} {name:<12} k={k} rec-detect {ev['recording_detection_rate']:.3f} "
@@ -198,12 +141,12 @@ def main() -> None:
         results[str(fs)] = run_rate(cfg, fs, feats, timing=(fs == cfg["stream"]["fs"]))
     ablation = {}
     feats64 = features_at_rate(cfg, cfg["stream"]["fs"])
-    for group, names in GROUPS.items():
+    for group, names in FEATURE_GROUPS.items():
         if names is None:
             continue
         print(f"ablation {group}", flush=True)
         ablation[group] = {"features": names,
-                           **run_rate(cfg, cfg["stream"]["fs"], subset(feats64, names), timing=False,
+                           **run_rate(cfg, cfg["stream"]["fs"], pt.subset(feats64, group_indices(group)), timing=False,
                                       models={k: cfg["models"][k] for k in ("pca", "iforest")})}
     print("full-engine timing at 64 kHz", flush=True)
     timing = pipeline_timing(cfg, cfg["stream"]["fs"], paced_seconds=60.0)
